@@ -14,6 +14,10 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CWinProg2Doc* GetDocument() const;
+	BOOL m_bDrawMode;
+	int m_btSelectMode;
+	CPoint m_StartPoint, m_EndPoint;
+	CPoint m_PointStart, m_PointEnd;
 
 // 작업입니다.
 public:
@@ -42,6 +46,7 @@ protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -49,8 +54,13 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnDrawpoly();
 	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
-	afx_msg void OnEllipse();
-	afx_msg void OnRectangel();
+	void OnEllipse(CPoint &point);
+	void OnRectangle(CPoint &point);
+	afx_msg void DrawEllipseEnd();
+	afx_msg void DrawRectangleEnd();
+	afx_msg void OnButtonRectangle();
+	afx_msg void OnButtonEllipse();
+	afx_msg void OnDrawellipse();
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

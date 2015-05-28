@@ -198,8 +198,8 @@ BEGIN
     POPUP "弊府扁 档备"
     BEGIN
         MENUITEM "PolyLine(&T)",                ID_DrawPoly
-        MENUITEM "Ellipse(&L)",                 ID_ELLIPSE
-        MENUITEM "Rectangle(&R)",               ID_RECTANGEL
+        MENUITEM "Ellipse(&L)",                 ID_DRAW_ELLIPSE
+        MENUITEM "Rectangle(&R)",               ID_DRAW_RECTANGLE
     END
     POPUP "弊府扁 加己"
     BEGIN

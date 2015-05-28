@@ -30,13 +30,20 @@
 #define ID_32780                        32780
 #define ID_ELLIPSE                      32781
 #define ID_RECTANGEL                    32782
+#define ID_RECTANGLE                    32783
+#define ID_32784                        32784
+#define ID_32785                        32785
+#define ID_DRAWELLIPSE                  32786
+#define ID_DRAWRECTANGLE                32787
+#define ID_DRAW_ELLIPSE                 32788
+#define ID_DRAW_RECTANGLE               32789
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32783
+#define _APS_NEXT_COMMAND_VALUE         32790
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
