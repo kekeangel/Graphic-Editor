@@ -204,6 +204,15 @@ BEGIN
         MENUITEM "색상",                          ID_Color
         MENUITEM "글꼴",                          ID_Font
         MENUITEM "선 종류",                        ID_LineType
+        POPUP "선 굵기"
+        BEGIN
+            MENUITEM "1",                           ID_Bold_1, CHECKED
+            MENUITEM "2",                           ID_Bold_2
+            MENUITEM "3",                           ID_Bold_3
+            MENUITEM "4",                           ID_Bold_4
+            MENUITEM "5",                           ID_Bold_5
+            MENUITEM "6",                           ID_Bold_6
+        END
     END
 END
 

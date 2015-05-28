@@ -17,6 +17,13 @@ public:
 
 // 작업입니다.
 public:
+	BOOL Drawing;
+	BOOL Writable;
+	CPoint old_point;
+	CPoint cur_point;
+	//CPoint point;
+	CDC* memDC;
+	CBitmap *bitmap, *oldBitmap;
 
 // 재정의입니다.
 public:
@@ -49,6 +56,8 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnDrawpoly();
 	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	virtual void OnInitialUpdate();
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

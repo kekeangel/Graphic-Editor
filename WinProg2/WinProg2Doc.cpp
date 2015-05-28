@@ -24,6 +24,18 @@ IMPLEMENT_DYNCREATE(CWinProg2Doc, CDocument)
 BEGIN_MESSAGE_MAP(CWinProg2Doc, CDocument)
 	ON_COMMAND(ID_Color, &CWinProg2Doc::OnColor)
 	ON_COMMAND(ID_Font, &CWinProg2Doc::OnFont)
+	ON_COMMAND(ID_Bold_1, &CWinProg2Doc::OnBold1)
+	ON_COMMAND(ID_Bold_2, &CWinProg2Doc::OnBold2)
+	ON_COMMAND(ID_Bold_3, &CWinProg2Doc::OnBold3)
+	ON_COMMAND(ID_Bold_4, &CWinProg2Doc::OnBold4)
+	ON_COMMAND(ID_Bold_5, &CWinProg2Doc::OnBold5)
+	ON_COMMAND(ID_Bold_6, &CWinProg2Doc::OnBold6)
+	ON_UPDATE_COMMAND_UI(ID_Bold_1, &CWinProg2Doc::OnUpdateBold1)
+	ON_UPDATE_COMMAND_UI(ID_Bold_2, &CWinProg2Doc::OnUpdateBold2)
+	ON_UPDATE_COMMAND_UI(ID_Bold_3, &CWinProg2Doc::OnUpdateBold3)
+	ON_UPDATE_COMMAND_UI(ID_Bold_4, &CWinProg2Doc::OnUpdateBold4)
+	ON_UPDATE_COMMAND_UI(ID_Bold_5, &CWinProg2Doc::OnUpdateBold5)
+	ON_UPDATE_COMMAND_UI(ID_Bold_6, &CWinProg2Doc::OnUpdateBold6)
 END_MESSAGE_MAP()
 
 
@@ -33,7 +45,8 @@ CWinProg2Doc::CWinProg2Doc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	select = EMPTY;
-
+	color = RGB(0, 0, 0);
+	bold = ONE;
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -144,7 +157,7 @@ void CWinProg2Doc::OnColor()
 {
 	CColorDialog dlg(RGB(255,0,0),CC_FULLOPEN);
 	dlg.DoModal();
-	COLORREF color = dlg.GetColor();
+	color = dlg.GetColor();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
@@ -159,4 +172,130 @@ void CWinProg2Doc::OnFont()
 		dlg.GetCurrentFont(&lf);
 	}
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
+
+	if (isNew){
+		m_Cur = new PolyLine();
+		m_Object.AddTail(m_Cur);
+
+		return (PolyLine*)m_Cur;
+	}
+
+	if (m_Cur != NULL && select == POLYLINE) {
+		return (PolyLine*)m_Cur;
+	}
+	return NULL;
+}
+
+CPtrList& CWinProg2Doc::getObject() {
+	return m_Object;
+}
+
+void CWinProg2Doc::OnBold1()
+{
+	bold = ONE;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnBold2()
+{
+	bold = TWO;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnBold3()
+{
+	bold = THREE;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnBold4()
+{
+	bold = FOUR;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnBold5()
+{
+	bold = FIVE;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnBold6()
+{
+	bold = SIX;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold1(CCmdUI *pCmdUI)
+{
+	if (bold == ONE){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold2(CCmdUI *pCmdUI)
+{
+	if (bold == TWO){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold3(CCmdUI *pCmdUI)
+{
+	if (bold == THREE){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold4(CCmdUI *pCmdUI)
+{
+	if (bold == FOUR){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold5(CCmdUI *pCmdUI)
+{
+	if (bold == FIVE){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
+
+
+void CWinProg2Doc::OnUpdateBold6(CCmdUI *pCmdUI)
+{
+	if (bold == SIX){
+		pCmdUI->SetCheck(1);
+	}
+	else
+		pCmdUI->SetCheck(0);
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 }
