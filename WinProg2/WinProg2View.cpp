@@ -34,6 +34,8 @@ BEGIN_MESSAGE_MAP(CWinProg2View, CView)
 	ON_WM_MOUSEMOVE()
 	ON_COMMAND(ID_DrawPoly, &CWinProg2View::OnDrawpoly)
 	ON_UPDATE_COMMAND_UI(ID_DrawPoly, &CWinProg2View::OnUpdateDrawpoly)
+	ON_COMMAND(ID_ELLIPSE, &CWinProg2View::OnEllipse)
+	ON_COMMAND(ID_RECTANGEL, &CWinProg2View::OnRectangel)
 END_MESSAGE_MAP()
 
 // CWinProg2View »ý¼º/¼Ò¸ê
@@ -189,4 +191,22 @@ void CWinProg2View::OnUpdateDrawpoly(CCmdUI *pCmdUI)
 	}
 	else
 		pCmdUI->SetCheck(0);
+}
+
+
+void CWinProg2View::OnEllipse()
+{
+	// TODO: Add your command handler code here
+	if (GetDocument()->select == ELLIPSE){
+	}
+	else;
+}
+
+
+void CWinProg2View::OnRectangel()
+{
+	// TODO: Add your command handler code here
+	if (GetDocument()->select == RECTANGLE){
+	}
+	else;
 }

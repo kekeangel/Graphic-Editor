@@ -49,6 +49,8 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnDrawpoly();
 	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
+	afx_msg void OnEllipse();
+	afx_msg void OnRectangel();
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전
