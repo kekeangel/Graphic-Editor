@@ -72,12 +72,6 @@ void CWinProg2View::OnDraw(CDC* pDC)
 	}
 	else if (GetDocument()->select == RECTANGLE) {
 	}
-	else if (GetDocument()->select == TEXT) {
-	}
-	else if (GetDocument()->select == POLYLINE) {
-	}
-	else if (GetDocument()->select == LINE) {
-	}
 	else;
 
 }
@@ -152,10 +146,10 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_bDrawMode = TRUE;				// 그리기 모드
 	if (GetDocument()->select) {
-		SetCapture();
+		//SetCapture();
 		m_PointStart = m_PointEnd = point;	// 현재 포인트 좌표 저장
 	}
-
+	
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	
 
@@ -178,12 +172,6 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 		else if (GetDocument()->select == RECTANGLE) {
 			OnRectangle(point);
 		}
-		else if (GetDocument()->select == TEXT) {
-		}
-		else if (GetDocument()->select == POLYLINE) {
-		}
-		else if (GetDocument()->select == LINE) {
-		}
 		else;
 	}
 
@@ -200,12 +188,6 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 		else if (GetDocument()->select == RECTANGLE) {
 			DrawRectangleEnd();
-		}
-		else if (GetDocument()->select == TEXT) {
-		}
-		else if (GetDocument()->select == POLYLINE) {
-		}
-		else if (GetDocument()->select == LINE) {
 		}
 		else;
 	}
@@ -292,7 +274,7 @@ void CWinProg2View::DrawEllipseEnd()
 	dc.Ellipse(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);
 	m_bDrawMode = FALSE;															// 그리기 모드 해제
 
-	::ReleaseCapture();
+	ReleaseCapture();
 }
 
 void CWinProg2View::DrawRectangleEnd()
@@ -306,7 +288,7 @@ void CWinProg2View::DrawRectangleEnd()
 	dc.Rectangle(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);
 	m_bDrawMode = FALSE;															// 그리기 모드를 해제한다.
 
-	::ReleaseCapture();
+	ReleaseCapture();
 }
 
 void CWinProg2View::OnButtonEllipse()
