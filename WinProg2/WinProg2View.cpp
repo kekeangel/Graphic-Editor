@@ -138,8 +138,17 @@ CWinProg2Doc* CWinProg2View::GetDocument() const // 디버그되지 않은 버전은 인라�
 void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
-
+	if (GetDocument()->select == ELLIPSE){
+	}
+	else if (GetDocument()->select == RECTANGLE) {
+	}
+	else if (GetDocument()->select == TEXT) {
+	}
+	else if (GetDocument()->select == POLYLINE) {
+	}
+	else if (GetDocument()->select == LINE) {
+	}
+	else;
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -148,6 +157,17 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (GetDocument()->select == ELLIPSE){
+	}
+	else if (GetDocument()->select == RECTANGLE) {
+	}
+	else if (GetDocument()->select == TEXT) {
+	}
+	else if (GetDocument()->select == POLYLINE) {
+	}
+	else if (GetDocument()->select == LINE) {
+	}
+	else;
 
 	CView::OnLButtonUp(nFlags, point);
 }

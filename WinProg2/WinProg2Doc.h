@@ -6,7 +6,7 @@
 #pragma once
 
 enum Select{
-	POLYLINE, TEXT, ELLIPSE, RECTANGLE, EMPTY
+	POLYLINE, TEXT, ELLIPSE, RECTANGLE, LINE, EMPTY
 };
 
 class CWinProg2Doc : public CDocument
