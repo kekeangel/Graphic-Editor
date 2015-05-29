@@ -34,16 +34,18 @@ BEGIN_MESSAGE_MAP(CWinProg2View, CView)
 	ON_WM_MOUSEMOVE()
 	ON_COMMAND(ID_DrawPoly, &CWinProg2View::OnDrawpoly)
 	ON_UPDATE_COMMAND_UI(ID_DrawPoly, &CWinProg2View::OnUpdateDrawpoly)
-	ON_COMMAND(ID_DRAW_ELLIPSE, CWinProg2View::OnButtonEllipse)
-	ON_COMMAND(ID_DRAW_RECTANGLE, CWinProg2View::OnButtonRectangle)
-	END_MESSAGE_MAP()
+	ON_WM_LBUTTONDBLCLK()
+END_MESSAGE_MAP()
 
 // CWinProg2View 생성/소멸
 
 CWinProg2View::CWinProg2View()
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
-	m_bDrawMode = FALSE; 
+	Drawing = FALSE;
+	Writable = FALSE;
+	memDC = NULL;
+	bitmap = NULL;
 }
 
 CWinProg2View::~CWinProg2View()
@@ -62,18 +64,37 @@ BOOL CWinProg2View::PreCreateWindow(CREATESTRUCT& cs)
 
 void CWinProg2View::OnDraw(CDC* pDC)
 {
+	CRect rect, rect1;
+	GetClientRect(&rect);
+
 	CWinProg2Doc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+
+	pDC->GetClipBox(&rect1);
+
+	oldBitmap = memDC->SelectObject(bitmap);
+	CGdiObject* old = memDC->SelectStockObject(WHITE_BRUSH);
+	CGdiObject* oldPen = memDC->SelectStockObject(WHITE_PEN);
+	memDC->SelectObject(CPen(PS_SOLID, pDoc->bold, RGB(0, 0, 0)));
+	
+	memDC->Rectangle(rect);
+	memDC->SelectObject(oldPen);
+
+	CPtrList* list = &pDoc->getObject();
+
+	POSITION pos = list->GetHeadPosition();
+	while (pos != NULL) {
+		((Object_Draw*)list->GetNext(pos))->Draw(memDC);
+	}
+
+	pDC->BitBlt(0, 0, rect1.Width(), rect1.Height(), memDC, 0, 0, SRCCOPY);
+
+	memDC->SelectObject(old);
+	memDC->SelectObject(oldBitmap);
+
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-
-	if (GetDocument()->select == ELLIPSE){
-	}
-	else if (GetDocument()->select == RECTANGLE) {
-	}
-	else;
-
 }
 
 
@@ -142,60 +163,91 @@ CWinProg2Doc* CWinProg2View::GetDocument() const // 디버그되지 않은 버전은 인라�
 
 
 void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
-
 {
-	m_bDrawMode = TRUE;				// 그리기 모드
-	if (GetDocument()->select) {
-		//SetCapture();
-		m_PointStart = m_PointEnd = point;	// 현재 포인트 좌표 저장
-	}
-	
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	
+	CWinProg2Doc* pDoc = GetDocument();
+
+	CClientDC dc(this);
+
+	switch (pDoc->select){
+	case POLYLINE:
+		CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+		CPen *oldPen = dc.SelectObject(&pen);
+		if (Writable == FALSE){
+			Writable = TRUE;
+			old_point = cur_point = point;
+			pDoc->getPolyLineDraw(TRUE)->addPoint(point);
+		}
+		else{
+			pDoc->getPolyLineDraw()->addPoint(point);
+		}
+		
+
+		
+		Drawing = TRUE;
+	}
+
 
 	CView::OnLButtonDown(nFlags, point);
-}
-
-
-void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
-{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	CString str;
-	str.Format(_T("%4d,%4d"), point.x, point.y);
-	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
-	pMainFrame->m_wndStatusBar.SetPaneText(1, str);
-
-	if (m_bDrawMode) {
-		if (GetDocument()->select == ELLIPSE){
-			OnEllipse(point);
-		}
-		else if (GetDocument()->select == RECTANGLE) {
-			OnRectangle(point);
-		}
-		else;
-	}
-
-	CView::OnMouseMove(nFlags, point);
 }
 
 
 void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	if (m_bDrawMode) {
-		if (GetDocument()->select == ELLIPSE){
-			DrawEllipseEnd();
-		}
-		else if (GetDocument()->select == RECTANGLE) {
-			DrawRectangleEnd();
-		}
-		else;
+	CWinProg2Doc* pDoc = GetDocument();
+	CClientDC dc(this);
+
+	if (pDoc->select == POLYLINE){
+		CPen pen(PS_SOLID, 1, pDoc->color);
+		old_point = point;
+		pDoc->getPolyLineDraw()->addPoint(point);
 	}
+
 	CView::OnLButtonUp(nFlags, point);
 }
 
 
+void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CWinProg2Doc* pDoc = GetDocument();
+	CClientDC dc(this);
+	CRect rect;
+	GetClientRect(&rect);
+	CString str;
+	str.Format(_T("%4d,%4d"), point.x, point.y);
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	pMainFrame->m_wndStatusBar.SetPaneText(1, str);
 
+	CPen cpen(PS_SOLID, pDoc->bold, RGB(0, 0, 0));
+	CBrush cbrush(HS_CROSS, RGB(255, 255, 255));
+	CPen *oldPen = dc.SelectObject(&cpen);
+	CBrush *oldBrush = dc.SelectObject(&cbrush);
+
+	if (Writable == TRUE){
+		switch (pDoc->select){
+			case POLYLINE:
+				CPen pen(PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));
+				dc.SelectObject(GetStockObject(NULL_BRUSH));
+				dc.SetROP2(R2_XORPEN);
+				oldPen = (CPen *)dc.SelectObject(&pen);
+				dc.MoveTo(old_point);
+				dc.LineTo(cur_point);
+
+				dc.MoveTo(old_point);
+				dc.LineTo(point);
+				cur_point = point;
+///				Invalidate();
+				break;
+			}
+	}
+	
+
+	dc.SelectObject(oldPen);
+
+	CView::OnMouseMove(nFlags, point);
+}
 
 //Polyline 메뉴 선택
 void CWinProg2View::OnDrawpoly()
@@ -227,78 +279,39 @@ void CWinProg2View::OnUpdateDrawpoly(CCmdUI *pCmdUI)
 }
 
 
-void CWinProg2View::OnEllipse(CPoint &point)
+void CWinProg2View::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	// TODO: Add your command handler code here
-	CClientDC dc(this);
-	dc.SelectStockObject(NULL_BRUSH);
-	CPen m_penDot(PS_DOT, 1, RGB(0, 0, 0));
-	dc.SelectObject(&m_penDot);
-	dc.SetROP2(R2_XORPEN);
-
-	
-	dc.Ellipse(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);			// 이전 직선 지움
-	
-	dc.Ellipse(m_PointStart.x, m_PointStart.y, point.x, point.y);					// 새로운 직선
-	
-	m_PointEnd = point;																// 직선의 끝점 좌표 갱신
-}
-
-
-
-void CWinProg2View::OnRectangle(CPoint &point)
-{
-	// TODO: Add your command handler code here
-	CClientDC dc(this);
-	dc.SelectStockObject(NULL_BRUSH);
-	CPen m_penDot(PS_DOT, 1, RGB(0, 0, 0));
-	dc.SelectObject(&m_penDot);
-	dc.SetROP2(R2_XORPEN);
-
-	
-	dc.Rectangle(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);		// 이전 직선 지움
-	
-	dc.Rectangle(m_PointStart.x, m_PointStart.y, point.x, point.y);					// 새로운 직선
-	
-	m_PointEnd = point;																// 직선 끝점 좌표 갱신
-}
-
-void CWinProg2View::DrawEllipseEnd()
-{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CWinProg2Doc* pDoc = GetDocument();
 	CClientDC dc(this);
 
-	CPen pen;
-	CBrush brush;
-	
-	dc.SetROP2(R2_COPYPEN);															// 최종적인 직선
-	dc.Ellipse(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);
-	m_bDrawMode = FALSE;															// 그리기 모드 해제
-
-	ReleaseCapture();
+	if (pDoc->select == POLYLINE){
+		//old_point = point;
+		dc.MoveTo(old_point);
+		dc.LineTo(point);
+		pDoc->getPolyLineDraw()->addPoint(point);
+		Writable = FALSE;
+		
+	}
+	Invalidate();
+	CView::OnLButtonDblClk(nFlags, point);
 }
 
-void CWinProg2View::DrawRectangleEnd()
+
+void CWinProg2View::OnInitialUpdate()
 {
-	CClientDC dc(this);
+	CView::OnInitialUpdate();
 
-	CPen pen;
-	CBrush brush;
-	
-	dc.SetROP2(R2_COPYPEN);															// 최종적인 직선을 그린다.
-	dc.Rectangle(m_PointStart.x, m_PointStart.y, m_PointEnd.x, m_PointEnd.y);
-	m_bDrawMode = FALSE;															// 그리기 모드를 해제한다.
+	CRect rect;
+	GetClientRect(&rect);
 
-	ReleaseCapture();
-}
+	memDC = new CDC();
+	bitmap = new CBitmap();
 
-void CWinProg2View::OnButtonEllipse()
-{
-	// TODO: Add your command handler code here
-	GetDocument()->select = ELLIPSE;
-}
+	memDC->CreateCompatibleDC(GetDC());
+	bitmap->CreateCompatibleBitmap(GetDC(), rect.bottom, rect.right);
 
-void CWinProg2View::OnButtonRectangle()
-{
-	// TODO: Add your command handler code here
-	GetDocument()->select = RECTANGLE;
+	oldBitmap = memDC->SelectObject(bitmap);
+
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }

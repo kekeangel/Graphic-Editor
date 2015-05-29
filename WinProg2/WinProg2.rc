@@ -17,7 +17,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Korean (Korea) resources
+// 한국어(대한민국) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
@@ -198,14 +198,21 @@ BEGIN
     POPUP "그리기 도구"
     BEGIN
         MENUITEM "PolyLine(&T)",                ID_DrawPoly
-        MENUITEM "Ellipse(&L)",                 ID_DRAW_ELLIPSE
-        MENUITEM "Rectangle(&R)",               ID_DRAW_RECTANGLE
     END
     POPUP "그리기 속성"
     BEGIN
         MENUITEM "색상",                          ID_Color
         MENUITEM "글꼴",                          ID_Font
         MENUITEM "선 종류",                        ID_LineType
+        POPUP "선 굵기"
+        BEGIN
+            MENUITEM "1",                           ID_Bold_1, CHECKED
+            MENUITEM "2",                           ID_Bold_2
+            MENUITEM "3",                           ID_Bold_3
+            MENUITEM "4",                           ID_Bold_4
+            MENUITEM "5",                           ID_Bold_5
+            MENUITEM "6",                           ID_Bold_6
+        END
     END
 END
 
@@ -474,7 +481,7 @@ BEGIN
     ID_LineType             "선의 모양을 결정합니다\n선 종류"
 END
 
-#endif    // Korean (Korea) resources
+#endif    // 한국어(대한민국) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

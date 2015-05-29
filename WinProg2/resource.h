@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by WinProg2.rc
+// Microsoft Visual C++에서 생성한 포함 파일입니다.
+// WinProg2.rc에서 사용되고 있습니다.
 //
 #define IDD_ABOUTBOX                    100
 #define IDR_POPUP_EDIT                  119
@@ -28,22 +28,31 @@
 #define ID_LineType                     32778
 #define ID_32779                        32779
 #define ID_32780                        32780
-#define ID_ELLIPSE                      32781
-#define ID_RECTANGEL                    32782
-#define ID_RECTANGLE                    32783
+#define ID_32781                        32781
+#define ID_32782                        32782
+#define ID_32783                        32783
 #define ID_32784                        32784
 #define ID_32785                        32785
-#define ID_DRAWELLIPSE                  32786
-#define ID_DRAWRECTANGLE                32787
-#define ID_DRAW_ELLIPSE                 32788
-#define ID_DRAW_RECTANGLE               32789
+#define ID_Bold_1                       32786
+#define ID_Bold_2                       32787
+#define ID_32788                        32788
+#define ID_32789                        32789
+#define ID_32790                        32790
+#define ID_32791                        32791
+#define ID_32792                        32792
+#define ID_32793                        32793
+#define ID_32794                        32794
+#define ID_Bold_3                       32795
+#define ID_Bold_4                       32796
+#define ID_Bold_5                       32797
+#define ID_Bold_6                       32798
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32790
+#define _APS_NEXT_COMMAND_VALUE         32799
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
