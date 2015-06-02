@@ -171,6 +171,7 @@ BEGIN
     POPUP "편집(&E)"
     BEGIN
         MENUITEM "실행 취소(&U)\tCtrl+Z",           ID_EDIT_UNDO
+        MENUITEM "다시 실행(&R)",                   ID_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "잘라내기(&T)\tCtrl+X",            ID_EDIT_CUT
         MENUITEM "복사(&C)\tCtrl+C",              ID_EDIT_COPY
@@ -198,6 +199,8 @@ BEGIN
     POPUP "그리기 도구"
     BEGIN
         MENUITEM "PolyLine(&T)",                ID_DrawPoly
+        MENUITEM "직사각형",                        ID_RectAngle
+        MENUITEM "텍스트상자",                       ID_TextBox
     END
     POPUP "그리기 속성"
     BEGIN
@@ -272,6 +275,17 @@ BEGIN
     DEFPUSHBUTTON   "확인",IDOK,113,41,50,14,WS_GROUP
 END
 
+IDD_STRINGDLG DIALOGEX 0, 0, 266, 97
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "문자열 입력"
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,74,70,50,14
+    PUSHBUTTON      "취소",IDCANCEL,139,70,50,14
+    LTEXT           "문자열을 입력하십시오",IDC_STATIC,95,19,74,11
+    EDITTEXT        IDC_EDIT1,24,36,218,23,ES_AUTOHSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -326,6 +340,14 @@ BEGIN
         RIGHTMARGIN, 163
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
+    END
+
+    IDD_STRINGDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 259
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 90
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -479,6 +501,11 @@ BEGIN
     ID_Color                "색상을 설정합니다\n색상"
     ID_Font                 "글꼴을 설정합니다\n글꼴"
     ID_LineType             "선의 모양을 결정합니다\n선 종류"
+END
+
+STRINGTABLE
+BEGIN
+    ID_RectAngle            "직사각형을 그립니다\n직사각형"
 END
 
 #endif    // 한국어(대한민국) resources

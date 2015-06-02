@@ -105,9 +105,12 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Object_Draw.h" />
     <ClInclude Include="PolyLine.h" />
+    <ClInclude Include="RectAngle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="WinProg2.h" />
     <ClInclude Include="WinProg2Doc.h" />
     <ClInclude Include="WinProg2View.h" />
@@ -117,10 +120,13 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Object_Draw.cpp" />
     <ClCompile Include="PolyLine.cpp" />
+    <ClCompile Include="RectAngle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringDlg.cpp" />
+    <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="WinProg2.cpp" />
     <ClCompile Include="WinProg2Doc.cpp" />
     <ClCompile Include="WinProg2View.cpp" />

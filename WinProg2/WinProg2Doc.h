@@ -3,11 +3,13 @@
 //
 #include "Object_Draw.h"
 #include "PolyLine.h"
+#include "RectAngle.h"
+#include "TextBox.h"
 
 #pragma once
 
 enum Select{
-	POLYLINE, TEXT, EMPTY
+	POLYLINE, TEXT, RECTANGLE, EMPTY, SELECT
 };
 
 extern enum Bold{
@@ -32,7 +34,13 @@ public:
 	Select select;
 	COLORREF color;
 	PolyLine* getPolyLineDraw(BOOL isNew = FALSE);
+	RectAngle* getRectDraw(BOOL isNew = FALSE);
+	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
+
 	Bold bold;
+	int index;
+	BOOL Empty, RE_Empty;
+	CString str;
 
 // 재정의입니다.
 public:
@@ -78,4 +86,12 @@ public:
 	afx_msg void OnUpdateBold4(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBold5(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBold6(CCmdUI *pCmdUI);
+	afx_msg void OnEditUndo();
+	afx_msg void OnEditRedo();
+	afx_msg void OnUpdateEditUndo(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateEditRedo(CCmdUI *pCmdUI);
+	afx_msg void OnTextbox();
+	afx_msg void OnUpdateTextbox(CCmdUI *pCmdUI);
+	afx_msg void OnRectangle();
+	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
 };

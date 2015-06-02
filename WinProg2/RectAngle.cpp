@@ -1,24 +1,23 @@
 #include "stdafx.h"
-#include "PolyLine.h"
+#include "RectAngle.h"
+//#include "WinProg2View.h"
 #include "WinProg2Doc.h"
-#include "WinProg2View.h"
 #include "MainFrm.h"
 
-PolyLine::PolyLine()
-{
-	m_color = RGB(0, 0, 0); 
-	//m_bold = ONE;
-}
 
-
-PolyLine::~PolyLine()
+RectAngle::RectAngle()
 {
 }
 
-void PolyLine::Draw(CDC *pDC){
+
+RectAngle::~RectAngle()
+{
+}
+
+void RectAngle::Draw(CDC* pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
 	m_color = pDoc->color;
-	
+
 	CPen pen(PS_SOLID, pDoc->bold, m_color);
 	CPen *oldPen = pDC->SelectObject(&pen);
 	POSITION pos = m_points.GetHeadPosition();
@@ -29,42 +28,23 @@ void PolyLine::Draw(CDC *pDC){
 	while (pos != NULL) {
 		p2 = m_points.GetNext(pos);
 
-		pDC->MoveTo(p1);
-		pDC->LineTo(p2);
+		pDC->Rectangle(p1.x, p1.y, p2.x, p2.y);
 		p1 = p2;
 	}
 	pDC->SelectObject(oldPen);
 }
 
-void PolyLine::addPoint(BOOL isDel, CPoint& point){
-	if (isDel){
-		m_points.AddTail(point);
-		del_points.RemoveHead();
-	}
-	else{
-		m_points.AddTail(point);
-	}
-	
+void RectAngle::addPoint(CPoint& point){
+	m_points.AddTail(point);
 }
 
-void PolyLine::setPencil(int nWidth, COLORREF rgbColor){
+void RectAngle::setPencel(int nWidth, COLORREF rgbColor){
 	m_color = rgbColor;
-
 }
 
-void PolyLine::delPoint(){
-	CPoint point;
-
-	point = m_points.GetTail();
-	del_points.AddTail(point);
-	m_points.RemoveTail();
-
-	
-}
-
-CPoint PolyLine::getPoint(BOOL isDel){
+CPoint RectAngle::getPoint(BOOL isDel){
 	if (isDel){
-		
+
 		return del_points.GetHead();
 	}
 	else{

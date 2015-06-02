@@ -18,6 +18,8 @@
 #define IDR_WinProg2TYPE                130
 #define ID_WINDOW_MANAGER               131
 #define IDS_EDIT_MENU                   306
+#define IDD_STRINGDLG                   310
+#define IDC_EDIT1                       1000
 #define ID_32771                        32771
 #define ID_DrawPoly                     32772
 #define ID_32773                        32773
@@ -46,14 +48,20 @@
 #define ID_Bold_4                       32796
 #define ID_Bold_5                       32797
 #define ID_Bold_6                       32798
+#define ID_32799                        32799
+#define ID_32800                        32800
+#define ID_TextBox                      32801
+#define ID_32802                        32802
+#define ID_32803                        32803
+#define ID_RectAngle                    32804
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32799
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           310
+#define _APS_NEXT_COMMAND_VALUE         32805
+#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

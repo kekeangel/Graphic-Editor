@@ -12,6 +12,7 @@
 #include "WinProg2Doc.h"
 #include "WinProg2View.h"
 #include "MainFrm.h"
+#include "StringDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -75,12 +76,12 @@ void CWinProg2View::OnDraw(CDC* pDC)
 	pDC->GetClipBox(&rect1);
 
 	oldBitmap = memDC->SelectObject(bitmap);
-	CGdiObject* old = memDC->SelectStockObject(WHITE_BRUSH);
-	CGdiObject* oldPen = memDC->SelectStockObject(WHITE_PEN);
+	//CGdiObject* old = memDC->SelectStockObject(WHITE_BRUSH);
+	//CGdiObject* oldPen = memDC->SelectStockObject(WHITE_PEN);
 	memDC->SelectObject(CPen(PS_SOLID, pDoc->bold, RGB(0, 0, 0)));
 	
 	memDC->Rectangle(rect);
-	memDC->SelectObject(oldPen);
+	//memDC->SelectObject(oldPen);
 
 	CPtrList* list = &pDoc->getObject();
 
@@ -89,10 +90,11 @@ void CWinProg2View::OnDraw(CDC* pDC)
 		((Object_Draw*)list->GetNext(pos))->Draw(memDC);
 	}
 
-	pDC->BitBlt(0, 0, rect1.Width(), rect1.Height(), memDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, rect1.bottom, rect1.right, memDC, 0, 0, SRCCOPY);
 
-	memDC->SelectObject(old);
+	//memDC->SelectObject(old);
 	memDC->SelectObject(oldBitmap);
+
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -169,22 +171,44 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CClientDC dc(this);
 
+	CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+	CPen *oldPen = dc.SelectObject(&pen);
+
 	switch (pDoc->select){
 	case POLYLINE:
-		CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
-		CPen *oldPen = dc.SelectObject(&pen);
+		
 		if (Writable == FALSE){
 			Writable = TRUE;
 			old_point = cur_point = point;
-			pDoc->getPolyLineDraw(TRUE)->addPoint(point);
+			pDoc->getPolyLineDraw(TRUE)->addPoint(FALSE, point);
+			pDoc->Empty = FALSE;
 		}
 		else{
-			pDoc->getPolyLineDraw()->addPoint(point);
+			//pDoc->getPolyLineDraw()->addPoint(point);
 		}
 		
-
-		
 		Drawing = TRUE;
+		break;
+	case TEXT:
+		//Rectangle 부분에서 처리
+
+	case RECTANGLE:
+		//CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+		//CPen *oldPne = dc.SelectObject(&pen);
+		if (Writable == FALSE){
+			Writable = TRUE;
+			old_point = cur_point = point;
+			if (pDoc->select == RECTANGLE)
+				pDoc->getRectDraw(TRUE)->addPoint(point);
+			else if (pDoc->select == TEXT)
+				pDoc->getTextBoxDraw(TRUE)->addPoint(point);
+			pDoc->Empty = FALSE;
+		}
+		else{
+
+		}
+		Drawing = TRUE;
+		break;
 	}
 
 
@@ -196,12 +220,40 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CWinProg2Doc* pDoc = GetDocument();
-	CClientDC dc(this);
 
-	if (pDoc->select == POLYLINE){
-		CPen pen(PS_SOLID, 1, pDoc->color);
-		old_point = point;
-		pDoc->getPolyLineDraw()->addPoint(point);
+	CClientDC dc(this);
+	CPen pen(PS_SOLID, 1, pDoc->color);
+	CRect rect;
+	StringDlg dlg(pDoc->str);
+
+	switch (pDoc->select){
+		case POLYLINE:
+			old_point = point;
+			pDoc->getPolyLineDraw()->addPoint(FALSE, point);
+			pDoc->RE_Empty = FALSE;
+			break;
+
+		case TEXT:
+			//Rectangle부분에서 처리
+
+		case RECTANGLE:
+			if (pDoc->select == RECTANGLE){
+				dc.Rectangle(old_point.x, old_point.y, point.x, point.y);
+							pDoc->getRectDraw()->addPoint(point);
+			}
+			else if (pDoc->select == TEXT){
+				rect.SetRectEmpty();
+				rect.SetRect(old_point, point);
+				dc.Rectangle(&rect);
+
+				dlg.DoModal();
+
+				dc.DrawText(pDoc->str, &rect, DT_SINGLELINE || DT_VCENTER);
+			}
+
+			Writable = FALSE;
+			//Invalidate();
+			break;
 	}
 
 	CView::OnLButtonUp(nFlags, point);
@@ -226,9 +278,11 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 	CBrush *oldBrush = dc.SelectObject(&cbrush);
 
 	if (Writable == TRUE){
+		CPen pen(PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));
+
 		switch (pDoc->select){
 			case POLYLINE:
-				CPen pen(PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));
+				
 				dc.SelectObject(GetStockObject(NULL_BRUSH));
 				dc.SetROP2(R2_XORPEN);
 				oldPen = (CPen *)dc.SelectObject(&pen);
@@ -238,7 +292,19 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 				dc.MoveTo(old_point);
 				dc.LineTo(point);
 				cur_point = point;
-///				Invalidate();
+
+				break;
+			case TEXT:
+				//Rectangle에서 처리
+
+			case RECTANGLE:
+				dc.SelectObject(GetStockObject(NULL_BRUSH));
+				dc.SetROP2(R2_XORPEN);
+				oldPen = (CPen*)dc.SelectObject(&pen);
+
+				dc.Rectangle(old_point.x, old_point.y, cur_point.x, cur_point.y);
+				dc.Rectangle(old_point.x, old_point.y, point.x, point.y);
+				cur_point = point;
 				break;
 			}
 	}
@@ -255,7 +321,7 @@ void CWinProg2View::OnDrawpoly()
 	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
 	CString str;
 
-	if (GetDocument()->select == EMPTY){
+	if (GetDocument()->select != POLYLINE){
 		GetDocument()->select = POLYLINE;
 		str = _T("Polyline");
 	}
@@ -289,7 +355,7 @@ void CWinProg2View::OnLButtonDblClk(UINT nFlags, CPoint point)
 		//old_point = point;
 		dc.MoveTo(old_point);
 		dc.LineTo(point);
-		pDoc->getPolyLineDraw()->addPoint(point);
+		pDoc->getPolyLineDraw()->addPoint(FALSE, point);
 		Writable = FALSE;
 		
 	}
