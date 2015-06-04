@@ -14,9 +14,9 @@ TextBox::~TextBox()
 
 void TextBox::Draw(CDC* pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	m_color = pDoc->color;
+	color = pDoc->color; 
 
-	CPen pen(PS_SOLID, pDoc->bold, m_color);
+	CPen pen(PS_SOLID, pDoc->bold, color);
 	CPen *oldPen = pDC->SelectObject(&pen);
 	POSITION pos = m_points.GetHeadPosition();
 	CRect rect;
@@ -40,5 +40,5 @@ void TextBox::addPoint(CPoint& point){
 }
 
 void TextBox::setPencil(int nWidth, COLORREF rgbColor){
-	m_color = rgbColor;
+	color = rgbColor;
 }

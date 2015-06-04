@@ -6,8 +6,10 @@ class PolyLine : public Object_Draw
 protected:
 	CList<CPoint, CPoint> m_points;
 	CList<CPoint, CPoint&> del_points;
+
+public:
 	COLORREF m_color;
-//	Bold m_bold;
+	Bold m_bold;
 
 public:
 	PolyLine();

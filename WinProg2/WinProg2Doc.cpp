@@ -86,13 +86,25 @@ BOOL CWinProg2Doc::OnNewDocument()
 
 void CWinProg2Doc::Serialize(CArchive& ar)
 {
+	POSITION pos = m_Object.GetHeadPosition();
+
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
+		while (pos != NULL){
+			m_Object.GetNext(pos);
+			m_Object.Serialize(ar);
+		}
+		
 	}
 	else
 	{
 		// TODO: 여기에 로딩 코드를 추가합니다.
+		while (pos != NULL){
+			m_Object.GetNext(pos);
+			m_Object.Serialize(ar);
+		}
+		
 	}
 }
 
@@ -233,6 +245,7 @@ TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
 	return NULL;
 }
 
+//작업정보가 저장된 포인터리스트 반환
 CPtrList& CWinProg2Doc::getObject() {
 	return m_Object;
 }

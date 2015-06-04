@@ -181,6 +181,8 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 			Writable = TRUE;
 			old_point = cur_point = point;
 			pDoc->getPolyLineDraw(TRUE)->addPoint(FALSE, point);
+			pDoc->getPolyLineDraw()->m_color= pDoc->color;
+			pDoc->getPolyLineDraw()->m_bold = pDoc->bold;
 			pDoc->Empty = FALSE;
 		}
 		else{
@@ -222,7 +224,7 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 	CWinProg2Doc* pDoc = GetDocument();
 
 	CClientDC dc(this);
-	CPen pen(PS_SOLID, 1, pDoc->color);
+	CPen pen;
 	CRect rect;
 	StringDlg dlg(pDoc->str);
 
@@ -238,17 +240,23 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 
 		case RECTANGLE:
 			if (pDoc->select == RECTANGLE){
+				pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
+				dc.SelectObject(&pen);
 				dc.Rectangle(old_point.x, old_point.y, point.x, point.y);
-							pDoc->getRectDraw()->addPoint(point);
+				pDoc->getRectDraw()->addPoint(point);
 			}
 			else if (pDoc->select == TEXT){
 				rect.SetRectEmpty();
 				rect.SetRect(old_point, point);
+
+
 				dc.Rectangle(&rect);
 
 				dlg.DoModal();
 
 				dc.DrawText(pDoc->str, &rect, DT_SINGLELINE || DT_VCENTER);
+				pDoc->getTextBoxDraw()->addPoint(point);
+				pDoc->RE_Empty = FALSE;
 			}
 
 			Writable = FALSE;
@@ -276,13 +284,15 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 	CBrush cbrush(HS_CROSS, RGB(255, 255, 255));
 	CPen *oldPen = dc.SelectObject(&cpen);
 	CBrush *oldBrush = dc.SelectObject(&cbrush);
+	COLORREF tmp_color;
+	tmp_color = pDoc->color ^ 255;
 
 	if (Writable == TRUE){
-		CPen pen(PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));
+		CPen pen;/* (PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));*/
 
 		switch (pDoc->select){
 			case POLYLINE:
-				
+				pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
 				dc.SelectObject(GetStockObject(NULL_BRUSH));
 				dc.SetROP2(R2_XORPEN);
 				oldPen = (CPen *)dc.SelectObject(&pen);

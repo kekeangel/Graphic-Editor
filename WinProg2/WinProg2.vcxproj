@@ -135,6 +135,15 @@
     <ResourceCompile Include="WinProg2.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\PS_DASH.bmp" />
+    <Image Include="res\PS_DASHDOT.bmp" />
+    <Image Include="res\PS_DASHDOTDOT.bmp" />
+    <Image Include="res\PS_DOT.bmp" />
+    <Image Include="res\PS_NULL.bmp" />
+    <Image Include="res\PS_SOILD.bmp" />
+    <Image Include="res\PS_SOLID.bmp" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\WinProg2.ico" />

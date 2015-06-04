@@ -19,6 +19,12 @@
 #define ID_WINDOW_MANAGER               131
 #define IDS_EDIT_MENU                   306
 #define IDD_STRINGDLG                   310
+#define IDB_BITMAP1                     312
+#define IDB_BITMAP2                     314
+#define IDB_BITMAP3                     315
+#define IDB_BITMAP4                     316
+#define IDB_BITMAP5                     317
+#define IDB_BITMAP6                     318
 #define IDC_EDIT1                       1000
 #define ID_32771                        32771
 #define ID_DrawPoly                     32772
@@ -54,14 +60,28 @@
 #define ID_32802                        32802
 #define ID_32803                        32803
 #define ID_RectAngle                    32804
+#define ID_Menu                         32805
+#define ID_32806                        32806
+#define ID_32807                        32807
+#define ID_32808                        32808
+#define ID_32809                        32809
+#define ID_32810                        32810
+#define ID_PS_SOLID                     32811
+#define ID_PS_DOT                       32812
+#define ID_DOT                          32813
+#define ID_DASHDOT                      32814
+#define ID_DASHDOTDOT                   32815
+#define ID_BUTTON32819                  32819
+#define ID_TYPE                         32820
+#define ID_FONTSELECT                   32821
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32805
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_RESOURCE_VALUE        319
+#define _APS_NEXT_COMMAND_VALUE         32822
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

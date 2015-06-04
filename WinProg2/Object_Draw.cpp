@@ -4,6 +4,7 @@
 Object_Draw::Object_Draw()
 {
 	color = RGB(0, 0, 0);
+	bold = ONE;
 }
 
 

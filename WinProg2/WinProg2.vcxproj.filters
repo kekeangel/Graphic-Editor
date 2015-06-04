@@ -114,6 +114,33 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bitmap2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_SOLID.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_SOILD.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_DASH.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_DASHDOT.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_DASHDOTDOT.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_DOT.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\PS_NULL.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\WinProg2.rc2">

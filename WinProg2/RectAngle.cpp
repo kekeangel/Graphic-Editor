@@ -16,7 +16,7 @@ RectAngle::~RectAngle()
 
 void RectAngle::Draw(CDC* pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	m_color = pDoc->color;
+	//m_color = pDoc->color;
 
 	CPen pen(PS_SOLID, pDoc->bold, m_color);
 	CPen *oldPen = pDC->SelectObject(&pen);

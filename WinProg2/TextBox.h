@@ -7,6 +7,7 @@ protected:
 	CList<CPoint, CPoint> m_points;
 	CList<CPoint, CPoint&> del_points;
 	COLORREF m_color;
+	COLORREF f_color;
 
 public:
 	TextBox();
