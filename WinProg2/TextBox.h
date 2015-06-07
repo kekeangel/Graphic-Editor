@@ -8,6 +8,9 @@ protected:
 	CList<CPoint, CPoint&> del_points;
 	COLORREF m_color;
 	COLORREF f_color;
+	CFont m_font;
+	LOGFONT m_lf;
+	int m_fontsize;
 
 public:
 	TextBox();

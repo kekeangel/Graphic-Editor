@@ -57,6 +57,9 @@
     <ClInclude Include="TextBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ELLipse.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinProg2.cpp">
@@ -90,6 +93,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TextBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ELLipse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

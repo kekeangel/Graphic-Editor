@@ -10,6 +10,7 @@ protected:
 public:
 	COLORREF m_color;
 	Bold m_bold;
+	UINT m_pen_type;
 
 public:
 	PolyLine();

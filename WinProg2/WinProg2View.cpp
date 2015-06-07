@@ -171,10 +171,13 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CClientDC dc(this);
 
-	CPen pen(PS_SOLID, 1, RGB(0, 0, 0));
+	CPen pen(pDoc->pen_type, pDoc->bold, RGB(0, 0, 0));
 	CPen *oldPen = dc.SelectObject(&pen);
 
 	switch (pDoc->select){
+	case LINE:
+		//POLYLINE부분에서 처리
+
 	case POLYLINE:
 		
 		if (Writable == FALSE){
@@ -191,6 +194,7 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 		
 		Drawing = TRUE;
 		break;
+
 	case TEXT:
 		//Rectangle 부분에서 처리
 
@@ -221,14 +225,26 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	CWinProg2Doc* pDoc = GetDocument();
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)GetDocument();
 
 	CClientDC dc(this);
 	CPen pen;
 	CRect rect;
 	StringDlg dlg(pDoc->str);
+	CFont font;
+
+	pen.CreatePen(pDoc->pen_type, pDoc->bold, pDoc->color);
+	dc.SelectObject(&pen);
 
 	switch (pDoc->select){
+		case LINE:
+			dc.MoveTo(old_point);
+			dc.LineTo(point);
+			pDoc->getPolyLineDraw()->addPoint(FALSE, point);
+			Writable = FALSE;
+			pDoc->RE_Empty = FALSE;
+			break;
+
 		case POLYLINE:
 			old_point = point;
 			pDoc->getPolyLineDraw()->addPoint(FALSE, point);
@@ -240,8 +256,8 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 
 		case RECTANGLE:
 			if (pDoc->select == RECTANGLE){
-				pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
-				dc.SelectObject(&pen);
+//				pen.CreatePen(pDoc->pen_type, pDoc->bold, pDoc->color);
+//				dc.SelectObject(&pen);
 				dc.Rectangle(old_point.x, old_point.y, point.x, point.y);
 				pDoc->getRectDraw()->addPoint(point);
 			}
@@ -253,6 +269,10 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 				dc.Rectangle(&rect);
 
 				dlg.DoModal();
+
+				font.CreateFontIndirectW(&pDoc->lf);
+				dc.SetTextColor(pDoc->color);
+				dc.SelectObject(&font);
 
 				dc.DrawText(pDoc->str, &rect, DT_SINGLELINE || DT_VCENTER);
 				pDoc->getTextBoxDraw()->addPoint(point);
@@ -291,6 +311,9 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 		CPen pen;/* (PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));*/
 
 		switch (pDoc->select){
+			case LINE:
+				//POLYLINE부분에서 처리
+
 			case POLYLINE:
 				pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
 				dc.SelectObject(GetStockObject(NULL_BRUSH));

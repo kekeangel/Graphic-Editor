@@ -14,10 +14,18 @@ TextBox::~TextBox()
 
 void TextBox::Draw(CDC* pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	color = pDoc->color; 
-
+	m_color = pDoc->color; 
+	m_lf = pDoc->lf;
+	m_fontsize = pDoc->fontsize;
+	
 	CPen pen(PS_SOLID, pDoc->bold, color);
 	CPen *oldPen = pDC->SelectObject(&pen);
+	
+	CFont font;
+	font.CreateFontIndirectW(&m_lf);
+
+	pDC->SetTextColor(m_color);
+	pDC->SelectObject(&font);
 	POSITION pos = m_points.GetHeadPosition();
 	CRect rect;
 

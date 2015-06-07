@@ -9,6 +9,7 @@ PolyLine::PolyLine()
 	m_color = RGB(0, 0, 0);
 	bold = ONE;
 	m_bold = ONE;
+	m_pen_type = PS_SOLID;
 }
 
 
@@ -18,9 +19,11 @@ PolyLine::~PolyLine()
 
 void PolyLine::Draw(CDC *pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	//m_color = pDoc->color;
+	m_color = pDoc->color;
+	m_pen_type = pDoc->pen_type;
+	m_bold = pDoc->bold;
 	
-	CPen pen(PS_SOLID, m_bold, m_color);
+	CPen pen(m_pen_type, m_bold, m_color);
 	CPen *oldPen = pDC->SelectObject(&pen);
 	POSITION pos = m_points.GetHeadPosition();
 

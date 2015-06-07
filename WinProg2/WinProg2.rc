@@ -121,10 +121,14 @@ BEGIN
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
     SEPARATOR
+    BUTTON      ID_Line
+    BUTTON      ID_RectAngle
+    BUTTON      ID_DrawPoly
+    BUTTON      ID_TextBox
+    SEPARATOR
     BUTTON      ID_TYPE
     BUTTON      ID_Font
-    SEPARATOR
-    BUTTON      ID_BUTTON32819
+    BUTTON      ID_Color
 END
 
 
@@ -209,9 +213,11 @@ BEGIN
     END
     POPUP "그리기 도구"
     BEGIN
-        MENUITEM "PolyLine(&T)",                ID_DrawPoly
+        MENUITEM "직선",                          ID_Line
         MENUITEM "직사각형",                        ID_RectAngle
+        MENUITEM "PolyLine(&T)",                ID_DrawPoly
         MENUITEM "텍스트상자",                       ID_TextBox
+        MENUITEM "타원",                          ID_32844
     END
     POPUP "그리기 속성"
     BEGIN
@@ -219,11 +225,11 @@ BEGIN
         MENUITEM "글꼴",                          ID_Font
         POPUP "선 종류"
         BEGIN
-            MENUITEM "실선",                          ID_PS_SOLID
-            MENUITEM "파선",                          ID_PS_DOT
-            MENUITEM "점선",                          ID_DOT
-            MENUITEM "일점쇄선",                        ID_DASHDOT
-            MENUITEM "이점쇄선",                        ID_DASHDOTDOT
+            MENUITEM "실선",                          ID_PS_SOLID, CHECKED
+            MENUITEM "파선",                          ID_PS_DASH
+            MENUITEM "점선",                          ID_PS_DOT
+            MENUITEM "일점쇄선",                        ID_PS_DASHDOT
+            MENUITEM "이점쇄선",                        ID_PS_DASHDOTDOT
         END
         POPUP "선 굵기"
         BEGIN
@@ -523,7 +529,22 @@ END
 
 STRINGTABLE
 BEGIN
+    ID_TextBox              "문자열을 입력할 수 있는 상자를 만듭니다.\n텍스트상자"
     ID_RectAngle            "직사각형을 그립니다\n직사각형"
+    ID_PS_SOLID             "선의 타입을 실선으로 설정합니다.\n실선"
+    ID_PS_DOT               "선의 타입을 점선으로 설정합니다.\n점선"
+END
+
+STRINGTABLE
+BEGIN
+    ID_PS_DASH              "선의 타입을 파선으로 설정합니다.\n파선"
+    ID_PS_DASHDOT           "선의 타입을 일점쇄선으로 설정합니다\n일점쇄선"
+    ID_PS_DASHDOTDOT        "선의 타입을 이점쇄선으로 설정합니다\n이점쇄선"
+END
+
+STRINGTABLE
+BEGIN
+    ID_Line                 "직선을 그립니다.\n직선"
 END
 
 #endif    // 한국어(대한민국) resources

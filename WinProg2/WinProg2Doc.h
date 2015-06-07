@@ -9,7 +9,7 @@
 #pragma once
 
 enum Select{
-	POLYLINE, TEXT, RECTANGLE, EMPTY, SELECT
+	LINE, POLYLINE, TEXT, RECTANGLE, EMPTY, SELECT
 };
 
 
@@ -34,9 +34,12 @@ public:
 	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
 
 	Bold bold;
-	int index;
+	int index, fontsize=10;
+	UINT pen_type;
 	BOOL Empty, RE_Empty;
 	CString str;
+	CFont font;
+	LOGFONT lf;
 
 // 재정의입니다.
 public:
@@ -70,18 +73,6 @@ protected:
 public:
 	afx_msg void OnColor();
 	afx_msg void OnFont();
-	afx_msg void OnBold1();
-	afx_msg void OnBold2();
-	afx_msg void OnBold3();
-	afx_msg void OnBold4();
-	afx_msg void OnBold5();
-	afx_msg void OnBold6();
-	afx_msg void OnUpdateBold1(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold2(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold3(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold4(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold5(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold6(CCmdUI *pCmdUI);
 	afx_msg void OnEditUndo();
 	afx_msg void OnEditRedo();
 	afx_msg void OnUpdateEditUndo(CCmdUI *pCmdUI);
@@ -90,4 +81,6 @@ public:
 	afx_msg void OnUpdateTextbox(CCmdUI *pCmdUI);
 	afx_msg void OnRectangle();
 	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
+	afx_msg void OnLine();
+	afx_msg void OnUpdateLine(CCmdUI *pCmdUI);
 };
