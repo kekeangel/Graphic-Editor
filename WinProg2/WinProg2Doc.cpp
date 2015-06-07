@@ -37,6 +37,8 @@ BEGIN_MESSAGE_MAP(CWinProg2Doc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_RectAngle, &CWinProg2Doc::OnUpdateRectangle)
 	ON_COMMAND(ID_Line, &CWinProg2Doc::OnLine)
 	ON_UPDATE_COMMAND_UI(ID_Line, &CWinProg2Doc::OnUpdateLine)
+	ON_COMMAND(ID_ELLipse, &CWinProg2Doc::OnEllipse)
+	ON_UPDATE_COMMAND_UI(ID_ELLipse, &CWinProg2Doc::OnUpdateEllipse)
 END_MESSAGE_MAP()
 
 
@@ -192,8 +194,10 @@ void CWinProg2Doc::OnFont()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
+//LINE, POLYLINE 생성 및 데이터 가져오기 함수
 PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
 
+	//새로 생성되는 경우
 	if (isNew){
 		m_Cur = new PolyLine();
 		m_Object.AddTail(m_Cur);
@@ -201,13 +205,16 @@ PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
 		return (PolyLine*)m_Cur;
 	}
 
+	//기존 값의 위치를 얻는 경우
 	if (m_Cur != NULL && (select == POLYLINE || select == LINE)) {
 		return (PolyLine*)m_Cur;
 	}
 	return NULL;
 }
 
+//Rectangle 생성 및 데이터 가져오기 함수
 RectAngle* CWinProg2Doc::getRectDraw(BOOL isNew){
+	//새로 생성
 	if (isNew){
 		m_Cur = new RectAngle();
 		m_Object.AddTail(m_Cur);
@@ -215,13 +222,16 @@ RectAngle* CWinProg2Doc::getRectDraw(BOOL isNew){
 		return (RectAngle*)m_Cur;
 	}
 
+	//기존 값의 위치를 얻을 때
 	if (m_Cur != NULL && select == RECTANGLE)
 		return (RectAngle*)m_Cur;
 
 	return NULL;
 }
 
+//TEXTBOX 생성 및 데이터 가져오기 함수
 TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
+	//새로 생성
 	if (isNew){
 		m_Cur = new TextBox();
 		m_Object.AddTail(m_Cur);
@@ -229,6 +239,7 @@ TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
 		return (TextBox*)m_Cur;
 	}
 
+	//기존 값 위치 얻음
 	if (m_Cur != NULL && select == TEXT){
 		return (TextBox*)m_Cur;
 	}
@@ -261,7 +272,7 @@ void CWinProg2Doc::OnEditRedo()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
-
+//Undo메뉴 활성/비활성 설정
 void CWinProg2Doc::OnUpdateEditUndo(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
@@ -274,7 +285,7 @@ void CWinProg2Doc::OnUpdateEditUndo(CCmdUI *pCmdUI)
 
 }
 
-
+//Redo메뉴 활성/비활성 설정
 void CWinProg2Doc::OnUpdateEditRedo(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
@@ -317,7 +328,7 @@ void CWinProg2Doc::OnUpdateTextbox(CCmdUI *pCmdUI)
 		pCmdUI->SetCheck(0);
 }
 
-
+//Rectangle 선택
 void CWinProg2Doc::OnRectangle()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -337,6 +348,7 @@ void CWinProg2Doc::OnRectangle()
 }
 
 
+//Rectangle 체크 설정 여부
 void CWinProg2Doc::OnUpdateRectangle(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
@@ -346,8 +358,7 @@ void CWinProg2Doc::OnUpdateRectangle(CCmdUI *pCmdUI)
 		pCmdUI->SetCheck(0);
 }
 
-
-
+//Line 설정
 void CWinProg2Doc::OnLine()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -366,11 +377,41 @@ void CWinProg2Doc::OnLine()
 	}
 }
 
-
+//Line 설정 체크 여부
 void CWinProg2Doc::OnUpdateLine(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	if (select == LINE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//Ellipse 설정
+void CWinProg2Doc::OnEllipse()
+{
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != ELLIPSE){
+		select = ELLIPSE;
+		strg = _T("Ellipse");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+
+}
+
+//Ellipse 설정 체크 여부
+void CWinProg2Doc::OnUpdateEllipse(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == ELLIPSE)
 		pCmdUI->SetCheck(1);
 	else
 		pCmdUI->SetCheck(0);

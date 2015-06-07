@@ -75,18 +75,21 @@
 #define ID_PS_DASH                      32822
 #define ID_PS_DASHDOT                   32823
 #define ID_PS_DASHDOTDOT                32824
-#define ID_BUTTON32826                  32826
 #define ID_32843                        32843
 #define ID_32844                        32844
 #define ID_Line                         32845
+#define ID_ELLipse                      32847
+#define ID_32849                        32849
+#define ID_32850                        32850
+#define ID_32851                        32851
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        319
-#define _APS_NEXT_COMMAND_VALUE         32846
-#define _APS_NEXT_CONTROL_VALUE         1002
-#define _APS_NEXT_SYMED_VALUE           311
+#define _APS_NEXT_COMMAND_VALUE         32852
+#define _APS_NEXT_CONTROL_VALUE         1006
+#define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif

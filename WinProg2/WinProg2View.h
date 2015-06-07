@@ -58,6 +58,7 @@ public:
 	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	virtual void OnInitialUpdate();
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

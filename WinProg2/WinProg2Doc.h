@@ -9,7 +9,7 @@
 #pragma once
 
 enum Select{
-	LINE, POLYLINE, TEXT, RECTANGLE, EMPTY, SELECT
+	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, EMPTY, SELECT
 };
 
 
@@ -29,8 +29,11 @@ public:
 public:
 	Select select;
 	COLORREF color;
+	//LINE, POLYLINE 积己窃荐
 	PolyLine* getPolyLineDraw(BOOL isNew = FALSE);
+	//RECTANGLE 积己窃荐
 	RectAngle* getRectDraw(BOOL isNew = FALSE);
+	//TEXTBOX 积己窃荐
 	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
 
 	Bold bold;
@@ -83,4 +86,6 @@ public:
 	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
 	afx_msg void OnLine();
 	afx_msg void OnUpdateLine(CCmdUI *pCmdUI);
+	afx_msg void OnEllipse();
+	afx_msg void OnUpdateEllipse(CCmdUI *pCmdUI);
 };

@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CWinProg2View, CView)
 	ON_COMMAND(ID_DrawPoly, &CWinProg2View::OnDrawpoly)
 	ON_UPDATE_COMMAND_UI(ID_DrawPoly, &CWinProg2View::OnUpdateDrawpoly)
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_SETCURSOR()
 END_MESSAGE_MAP()
 
 // CWinProg2View 생성/소멸
@@ -309,15 +310,16 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (Writable == TRUE){
 		CPen pen;/* (PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));*/
+		pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
+		dc.SelectObject(GetStockObject(NULL_BRUSH));
+		dc.SetROP2(R2_XORPEN);
 
 		switch (pDoc->select){
 			case LINE:
 				//POLYLINE부분에서 처리
 
 			case POLYLINE:
-				pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
-				dc.SelectObject(GetStockObject(NULL_BRUSH));
-				dc.SetROP2(R2_XORPEN);
+				
 				oldPen = (CPen *)dc.SelectObject(&pen);
 				dc.MoveTo(old_point);
 				dc.LineTo(cur_point);
@@ -413,4 +415,27 @@ void CWinProg2View::OnInitialUpdate()
 	oldBitmap = memDC->SelectObject(bitmap);
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+}
+
+//작업중일 때 마우스 커서 변경
+BOOL CWinProg2View::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (nHitTest == HTCLIENT){
+		CPoint point;
+		::GetCursorPos(&point);
+		ScreenToClient(&point);
+
+		if (Writable == TRUE){
+			::SetCursor(LoadCursor(NULL,IDC_CROSS));
+		}
+		else{
+			::SetCursor(LoadCursor(NULL, IDC_ARROW));
+		}
+
+		return TRUE;
+	}
+
+
+	return CView::OnSetCursor(pWnd, nHitTest, message);
 }
