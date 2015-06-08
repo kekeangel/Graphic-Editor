@@ -13,7 +13,6 @@ enum Select{
 };
 
 
-
 class CWinProg2Doc : public CDocument
 {
 protected: // serialization에서만 만들어집니다.
@@ -35,21 +34,22 @@ public:
 	RectAngle* getRectDraw(BOOL isNew = FALSE);
 	//TEXTBOX 생성함수
 	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
+	//작업정보가 저장된 포인터리스트 반환
+	CPtrList& getObject();
 
 	Bold bold;
-	int index, fontsize=10;
+	int index, fontsize = 10;
 	UINT pen_type;
 	BOOL Empty, RE_Empty;
 	CString str;
 	CFont font;
 	LOGFONT lf;
 
+
 // 재정의입니다.
 public:
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
-	CPtrList& getObject();
-
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -74,18 +74,16 @@ protected:
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
 public:
-	afx_msg void OnColor();
-	afx_msg void OnFont();
-	afx_msg void OnEditUndo();
-	afx_msg void OnEditRedo();
-	afx_msg void OnUpdateEditUndo(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateEditRedo(CCmdUI *pCmdUI);
-	afx_msg void OnTextbox();
-	afx_msg void OnUpdateTextbox(CCmdUI *pCmdUI);
-	afx_msg void OnRectangle();
-	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
 	afx_msg void OnLine();
 	afx_msg void OnUpdateLine(CCmdUI *pCmdUI);
+	afx_msg void OnRectangle();
+	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
+	afx_msg void OnDrawpoly();
+	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
+	afx_msg void OnTextbox();
+	afx_msg void OnUpdateTextbox(CCmdUI *pCmdUI);
 	afx_msg void OnEllipse();
 	afx_msg void OnUpdateEllipse(CCmdUI *pCmdUI);
+	afx_msg void OnSelectobject();
+	afx_msg void OnUpdateSelectobject(CCmdUI *pCmdUI);
 };

@@ -26,18 +26,8 @@ BEGIN_MESSAGE_MAP(CWinProg2App, CWinAppEx)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// 표준 인쇄 설정 명령입니다.
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
-	ON_COMMAND(ID_Bold_1, &CWinProg2App::OnBold1)
-	ON_UPDATE_COMMAND_UI(ID_Bold_1, &CWinProg2App::OnUpdateBold1)
-	ON_COMMAND(ID_Bold_2, &CWinProg2App::OnBold2)
-	ON_UPDATE_COMMAND_UI(ID_Bold_2, &CWinProg2App::OnUpdateBold2)
-	ON_COMMAND(ID_Bold_3, &CWinProg2App::OnBold3)
-	ON_UPDATE_COMMAND_UI(ID_Bold_3, &CWinProg2App::OnUpdateBold3)
-	ON_COMMAND(ID_Bold_4, &CWinProg2App::OnBold4)
-	ON_UPDATE_COMMAND_UI(ID_Bold_4, &CWinProg2App::OnUpdateBold4)
-	ON_COMMAND(ID_Bold_5, &CWinProg2App::OnBold5)
-	ON_UPDATE_COMMAND_UI(ID_Bold_5, &CWinProg2App::OnUpdateBold5)
-	ON_COMMAND(ID_Bold_6, &CWinProg2App::OnBold6)
-	ON_UPDATE_COMMAND_UI(ID_Bold_6, &CWinProg2App::OnUpdateBold6)
+	ON_COMMAND(ID_Color, &CWinProg2App::OnColor)
+	ON_COMMAND(ID_Font, &CWinProg2App::OnFont)
 	ON_COMMAND(ID_PS_SOLID, &CWinProg2App::OnPsSolid)
 	ON_UPDATE_COMMAND_UI(ID_PS_SOLID, &CWinProg2App::OnUpdatePsSolid)
 	ON_COMMAND(ID_PS_DASH, &CWinProg2App::OnPsDash)
@@ -48,6 +38,18 @@ BEGIN_MESSAGE_MAP(CWinProg2App, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_PS_DASHDOT, &CWinProg2App::OnUpdatePsDashdot)
 	ON_COMMAND(ID_PS_DASHDOTDOT, &CWinProg2App::OnPsDashdotdot)
 	ON_UPDATE_COMMAND_UI(ID_PS_DASHDOTDOT, &CWinProg2App::OnUpdatePsDashdotdot)
+	ON_COMMAND(ID_Bold1, &CWinProg2App::OnBold1)
+	ON_UPDATE_COMMAND_UI(ID_Bold1, &CWinProg2App::OnUpdateBold1)
+	ON_COMMAND(ID_Bold2, &CWinProg2App::OnBold2)
+	ON_UPDATE_COMMAND_UI(ID_Bold2, &CWinProg2App::OnUpdateBold2)
+	ON_COMMAND(ID_Bold3, &CWinProg2App::OnBold3)
+	ON_UPDATE_COMMAND_UI(ID_Bold3, &CWinProg2App::OnUpdateBold3)
+	ON_COMMAND(ID_Bold4, &CWinProg2App::OnBold4)
+	ON_UPDATE_COMMAND_UI(ID_Bold4, &CWinProg2App::OnUpdateBold4)
+	ON_COMMAND(ID_Bold5, &CWinProg2App::OnBold5)
+	ON_UPDATE_COMMAND_UI(ID_Bold5, &CWinProg2App::OnUpdateBold5)
+	ON_COMMAND(ID_Bold6, &CWinProg2App::OnBold6)
+	ON_UPDATE_COMMAND_UI(ID_Bold6, &CWinProg2App::OnUpdateBold6)
 END_MESSAGE_MAP()
 
 
@@ -56,15 +58,6 @@ END_MESSAGE_MAP()
 CWinProg2App::CWinProg2App()
 {
 	m_bHiColorIcons = TRUE;
-
-	// 다시 시작 관리자 지원
-	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
-#ifdef _MANAGED
-	// 응용 프로그램을 공용 언어 런타임 지원을 사용하여 빌드한 경우(/clr):
-	//     1) 이 추가 설정은 다시 시작 관리자 지원이 제대로 작동하는 데 필요합니다.
-	//     2) 프로젝트에서 빌드하려면 System.Windows.Forms에 대한 참조를 추가해야 합니다.
-	System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException);
-#endif
 
 	// TODO: 아래 응용 프로그램 ID 문자열을 고유 ID 문자열로 바꾸십시오(권장).
 	// 문자열에 대한 서식: CompanyName.ProductName.SubProduct.VersionInformation
@@ -96,7 +89,7 @@ BOOL CWinProg2App::InitInstance()
 	CWinAppEx::InitInstance();
 
 
-	EnableTaskbarInteraction(FALSE);
+	EnableTaskbarInteraction();
 
 	// RichEdit 컨트롤을 사용하려면  AfxInitRichEdit2()가 있어야 합니다.	
 	// AfxInitRichEdit2();
@@ -142,11 +135,18 @@ BOOL CWinProg2App::InitInstance()
 	}
 	m_pMainWnd = pMainFrame;
 
+	// 접미사가 있을 경우에만 DragAcceptFiles를 호출합니다.
+	//  MDI 응용 프로그램에서는 m_pMainWnd를 설정한 후 바로 이러한 호출이 발생해야 합니다.
+	// 끌어서 놓기에 대한 열기를 활성화합니다.
+	m_pMainWnd->DragAcceptFiles();
 
 	// 표준 셸 명령, DDE, 파일 열기에 대한 명령줄을 구문 분석합니다.
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
+	// DDE Execute 열기를 활성화합니다.
+	EnableShellOpen();
+	RegisterShellFileTypes(TRUE);
 
 
 	// 명령줄에 지정된 명령을 디스패치합니다.
@@ -226,6 +226,140 @@ void CWinProg2App::SaveCustomState()
 }
 
 // CWinProg2App 메시지 처리기
+
+//이하 선 종류 메세지 핸들러 및 갱신
+
+//색상설정메뉴
+void CWinProg2App::OnColor()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CColorDialog dlg(RGB(255, 0, 0), CC_FULLOPEN);
+	dlg.DoModal();
+	pDoc->color = dlg.GetColor();
+}
+
+//글꼴설정메뉴
+void CWinProg2App::OnFont()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CFontDialog dlg;
+	if (dlg.DoModal() == IDOK){
+		pDoc->color = dlg.GetColor();
+
+		dlg.GetCurrentFont(&pDoc->lf);
+		pDoc->fontsize = dlg.GetSize();
+	}
+}
+
+//실선 설정메뉴
+void CWinProg2App::OnPsSolid()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	pDoc->pen_type = PS_SOLID;
+}
+
+//실선 체크여부 설정
+void CWinProg2App::OnUpdatePsSolid(CCmdUI *pCmdUI)
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (pDoc->pen_type == PS_SOLID)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//파선 설정메뉴
+void CWinProg2App::OnPsDash()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	pDoc->pen_type = PS_DASH;
+}
+
+//파선 체크여부 설정
+void CWinProg2App::OnUpdatePsDash(CCmdUI *pCmdUI)
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+
+	if (pDoc->pen_type == PS_DASH)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//점선 설정메뉴
+void CWinProg2App::OnPsDot()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	pDoc->pen_type = PS_DOT;
+}
+
+//점선 체크여부 설정
+void CWinProg2App::OnUpdatePsDot(CCmdUI *pCmdUI)
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+
+	if (pDoc->pen_type == PS_DOT)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//일점쇄선 설정메뉴
+void CWinProg2App::OnPsDashdot()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	pDoc->pen_type = PS_DASHDOT;
+
+}
+
+//일점쇄선 체크여부 설정
+void CWinProg2App::OnUpdatePsDashdot(CCmdUI *pCmdUI)
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (pDoc->pen_type == PS_DASHDOT)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//이점쇄선 설정메뉴
+void CWinProg2App::OnPsDashdotdot()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	pDoc->pen_type = PS_DASHDOTDOT;
+}
+
+//이점쇄선 체크여부 설정
+void CWinProg2App::OnUpdatePsDashdotdot(CCmdUI *pCmdUI)
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+
+	if (pDoc->pen_type == PS_DASHDOTDOT)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//이하 선 굵기 메세지 핸들러 및 갱신
 
 //선굵기1
 void CWinProg2App::OnBold1()
@@ -356,112 +490,6 @@ void CWinProg2App::OnUpdateBold6(CCmdUI *pCmdUI)
 	if (pDoc->bold == SIX){
 		pCmdUI->SetCheck(1);
 	}
-	else
-		pCmdUI->SetCheck(0);
-}
-
-//실선 설정메뉴
-void CWinProg2App::OnPsSolid()
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	pDoc->pen_type = PS_SOLID;
-}
-
-//실선 체크여부
-void CWinProg2App::OnUpdatePsSolid(CCmdUI *pCmdUI)
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-
-	if (pDoc->pen_type == PS_SOLID){
-		pCmdUI->SetCheck(1);
-	}
-	else
-		pCmdUI->SetCheck(0);
-}
-
-//파선 설정메뉴
-void CWinProg2App::OnPsDash()
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	pDoc->pen_type = PS_DASH;
-}
-
-//파선 체크여부
-void CWinProg2App::OnUpdatePsDash(CCmdUI *pCmdUI)
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-
-	if (pDoc->pen_type == PS_DASH)
-		pCmdUI->SetCheck(1);
-	else
-		pCmdUI->SetCheck(0);
-}
-
-//점선 설정메뉴
-void CWinProg2App::OnPsDot()
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	pDoc->pen_type = PS_DOT;
-}
-
-//점선 체크여부
-void CWinProg2App::OnUpdatePsDot(CCmdUI *pCmdUI)
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-
-	if (pDoc->pen_type == PS_DOT)
-		pCmdUI->SetCheck(1);
-	else
-		pCmdUI->SetCheck(0);
-}
-
-//일점쇄선 설정메뉴
-void CWinProg2App::OnPsDashdot()
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	pDoc->pen_type = PS_DASHDOT;
-
-}
-
-//일점쇄선 체크여부
-void CWinProg2App::OnUpdatePsDashdot(CCmdUI *pCmdUI)
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-	if (pDoc->pen_type == PS_DASHDOT)
-		pCmdUI->SetCheck(1);
-	else
-		pCmdUI->SetCheck(0);
-}
-
-
-void CWinProg2App::OnPsDashdotdot()
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	pDoc->pen_type = PS_DASHDOTDOT;
-}
-
-
-void CWinProg2App::OnUpdatePsDashdotdot(CCmdUI *pCmdUI)
-{
-	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-
-	if (pDoc->pen_type == PS_DASHDOTDOT)
-		pCmdUI->SetCheck(1);
 	else
 		pCmdUI->SetCheck(0);
 }
