@@ -23,8 +23,9 @@ public:
 	CPoint old_point;
 	CPoint cur_point;
 	//CPoint point;
-	CDC* memDC;
-	CBitmap *bitmap, *oldBitmap;
+
+	CDC memDC;
+	CBitmap bitmap, *pOldbitmap;
 
 
 // 재정의입니다.
@@ -59,6 +60,7 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	virtual void OnInitialUpdate();
+	afx_msg void OnDeleteall();
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

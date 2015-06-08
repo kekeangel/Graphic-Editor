@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CWinProg2Doc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_ELLipse, &CWinProg2Doc::OnUpdateEllipse)
 	ON_COMMAND(ID_SelectObject, &CWinProg2Doc::OnSelectobject)
 	ON_UPDATE_COMMAND_UI(ID_SelectObject, &CWinProg2Doc::OnUpdateSelectobject)
+	ON_COMMAND(ID_FreeLine, &CWinProg2Doc::OnFreeline)
+	ON_UPDATE_COMMAND_UI(ID_FreeLine, &CWinProg2Doc::OnUpdateFreeline)
 END_MESSAGE_MAP()
 
 
@@ -51,6 +53,7 @@ CWinProg2Doc::CWinProg2Doc()
 	RE_Empty = TRUE;
 	str = _T("");
 	pen_type = PS_SOLID;
+	start = FALSE;
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -205,6 +208,38 @@ TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
 	//기존 값 위치 얻음
 	if (m_Cur != NULL && select == TEXT){
 		return (TextBox*)m_Cur;
+	}
+
+	return NULL;
+}
+
+//ELLIPSE 생성 및 데이터 가져오기 함수
+ELLipse* CWinProg2Doc::getEllipseDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new ELLipse();
+		m_Object.AddTail(m_Cur);
+	}
+
+	//기존 값 위치 얻음
+	if (m_Cur != NULL && select == ELLIPSE){
+		return (ELLipse*)m_Cur;
+	}
+
+	return NULL;
+}
+
+//FREELINE 생성 및 데이터 가져오기 함수
+FreeLine* CWinProg2Doc::getFreeLineDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new ELLipse();
+		m_Object.AddTail(m_Cur);
+	}
+
+	//기존 값 위치 얻음
+	if (m_Cur != NULL && select == FREELINE){
+		return (FreeLine*)m_Cur;
 	}
 
 	return NULL;
@@ -387,6 +422,35 @@ void CWinProg2Doc::OnUpdateSelectobject(CCmdUI *pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	if (select == SELECT)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+
+void CWinProg2Doc::OnFreeline()
+{
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != FREELINE){
+		select = FREELINE;
+		strg = _T("자유곡선");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+}
+
+
+void CWinProg2Doc::OnUpdateFreeline(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == FREELINE)
 		pCmdUI->SetCheck(1);
 	else
 		pCmdUI->SetCheck(0);

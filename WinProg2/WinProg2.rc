@@ -114,6 +114,19 @@ BEGIN
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
+    SEPARATOR
+    BUTTON      ID_SelectObject
+    BUTTON      ID_Line
+    BUTTON      ID_RectAngle
+    BUTTON      ID_ELLipse
+    BUTTON      ID_DrawPoly
+    BUTTON      ID_TextBox
+    BUTTON      ID_FreeLine
+    SEPARATOR
+    BUTTON      ID_BUTTON32825
+    BUTTON      ID_Font
+    BUTTON      ID_Color
+    BUTTON      ID_DeleteAll
 END
 
 
@@ -226,12 +239,12 @@ BEGIN
     END
     POPUP "그리기 도구(&D)"
     BEGIN
-        MENUITEM "개체선택",                        ID_SelectObject
         MENUITEM "직선",                          ID_Line
         MENUITEM "직사각형",                        ID_RectAngle
         MENUITEM "PolyLine",                    ID_DrawPoly
         MENUITEM "텍스트상자",                       ID_TextBox
         MENUITEM "타원",                          ID_ELLipse
+        MENUITEM "자유곡선",                        ID_FreeLine
     END
     POPUP "그리기 속성(&R)"
     BEGIN
@@ -254,6 +267,11 @@ BEGIN
             MENUITEM "5",                           ID_Bold5
             MENUITEM "6",                           ID_Bold6
         END
+    END
+    POPUP "개체도구"
+    BEGIN
+        MENUITEM "개체선택",                        ID_SelectObject
+        MENUITEM "전체 지우기",                      ID_DeleteAll
     END
 END
 
@@ -541,6 +559,18 @@ BEGIN
     ID_PS_DOT               "선의 종류를 점선으로 설정합니다.\n점선"
     ID_PS_DASHDOT           "선의 종류를 일점쇄선으로 설정합니다.\n일점쇄선"
     ID_DASHDOTDOT           "선의 종류를 이점쇄선으로 설정합니다.\n이점쇄선"
+END
+
+STRINGTABLE
+BEGIN
+    ID_SelectObject         "그려진 개체를 선택합니다\n개체선택"
+END
+
+STRINGTABLE
+BEGIN
+    ID_32836                "화면 전체를 지웁니다\n전체지우기"
+    ID_DeleteAll            "화면 전체를 지웁니다.\n전체 지우기"
+    ID_FreeLine             "자유곡선을 그립니다.\n자유곡선"
 END
 
 #endif    // 한국어(대한민국) resources

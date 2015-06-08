@@ -73,13 +73,19 @@
 #define ID_PS_DASHDOTDOT                32810
 #define ID_32815                        32815
 #define ID_SelectObject                 32816
+#define ID_BUTTON32820                  32820
+#define ID_BUTTON32825                  32825
+#define ID_32836                        32836
+#define ID_DeleteAll                    32837
+#define ID_32838                        32838
+#define ID_FreeLine                     32840
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        325
-#define _APS_NEXT_COMMAND_VALUE         32817
+#define _APS_NEXT_RESOURCE_VALUE        331
+#define _APS_NEXT_COMMAND_VALUE         32841
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

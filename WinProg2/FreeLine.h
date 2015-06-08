@@ -1,14 +1,11 @@
 #pragma once
-
 #include "Object_Draw.h"
-
-class ELLipse : public Object_Draw
+class FreeLine : public Object_Draw
 {
 public:
-	ELLipse();
-	virtual ~ELLipse();
-
-	virtual void Draw(CDC* pDc);
+	FreeLine();
+	virtual ~FreeLine();
+	virtual void Draw(CDC* pDC);
 
 	COLORREF color, m_color;
 	Bold bold, m_bold;

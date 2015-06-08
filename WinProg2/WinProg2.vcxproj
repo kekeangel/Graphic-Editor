@@ -103,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ELLipse.h" />
+    <ClInclude Include="FreeLine.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Object_Draw.h" />
     <ClInclude Include="PolyLine.h" />
@@ -118,6 +119,7 @@
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ELLipse.cpp" />
+    <ClCompile Include="FreeLine.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Object_Draw.cpp" />
     <ClCompile Include="PolyLine.cpp" />
@@ -139,6 +141,10 @@
     <ResourceCompile Include="WinProg2.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I0062_0409.ico" />
+    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I007c_0409.ico" />
+    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Win98.ico" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\User_Toolbar.bmp" />

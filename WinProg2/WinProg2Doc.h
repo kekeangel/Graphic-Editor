@@ -5,11 +5,13 @@
 #include "PolyLine.h"
 #include "RectAngle.h"
 #include "TextBox.h"
+#include "ELLipse.h"
+#include "FreeLine.h"
 
 #pragma once
 
 enum Select{
-	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, EMPTY, SELECT
+	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, FREELINE, EMPTY, SELECT
 };
 
 
@@ -34,13 +36,17 @@ public:
 	RectAngle* getRectDraw(BOOL isNew = FALSE);
 	//TEXTBOX 생성함수
 	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
+	//ELLIPSE 생성함수
+	ELLipse* getEllipseDraw(BOOL isNew = FALSE);
+	//FREELINE 생성함수
+	FreeLine* getFreeLineDraw(BOOL isNew = FALSE);
 	//작업정보가 저장된 포인터리스트 반환
 	CPtrList& getObject();
 
 	Bold bold;
 	int index, fontsize = 10;
 	UINT pen_type;
-	BOOL Empty, RE_Empty;
+	BOOL Empty, RE_Empty, start;
 	CString str;
 	CFont font;
 	LOGFONT lf;
@@ -86,4 +92,6 @@ public:
 	afx_msg void OnUpdateEllipse(CCmdUI *pCmdUI);
 	afx_msg void OnSelectobject();
 	afx_msg void OnUpdateSelectobject(CCmdUI *pCmdUI);
+	afx_msg void OnFreeline();
+	afx_msg void OnUpdateFreeline(CCmdUI *pCmdUI);
 };

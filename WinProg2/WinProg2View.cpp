@@ -34,6 +34,7 @@ BEGIN_MESSAGE_MAP(CWinProg2View, CView)
 	ON_WM_LBUTTONUP()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_SETCURSOR()
+	ON_COMMAND(ID_DeleteAll, &CWinProg2View::OnDeleteall)
 END_MESSAGE_MAP()
 
 // CWinProg2View 생성/소멸
@@ -44,8 +45,7 @@ CWinProg2View::CWinProg2View()
 	//GetClientRect(&m_rect);
 	Drawing = FALSE;
 	Writable = FALSE;
-	memDC = NULL;
-	bitmap = NULL;
+	pOldbitmap = NULL;
 }
 
 CWinProg2View::~CWinProg2View()
@@ -65,15 +65,18 @@ BOOL CWinProg2View::PreCreateWindow(CREATESTRUCT& cs)
 void CWinProg2View::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
+	
+	//더블버퍼링 이용 출력 설정
 
-	GetClientRect(&m_rect);
+	CClientDC dc(this);
 
-	memDC = new CDC();
-	bitmap = new CBitmap();
+	GetClientRect(m_rect);
 
-	memDC->CreateCompatibleDC(GetDC());
-	bitmap->CreateCompatibleBitmap(GetDC(), m_rect.Width(), m_rect.Height());
-	oldBitmap = memDC->SelectObject(bitmap);
+	memDC.CreateCompatibleDC(&dc);
+	bitmap.CreateCompatibleBitmap(&dc, m_rect.Width(), m_rect.Height());
+
+	pOldbitmap = memDC.SelectObject(&bitmap);
+	memDC.PatBlt(0, 0, m_rect.Width(), m_rect.Height(), WHITENESS);
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
@@ -88,29 +91,15 @@ void CWinProg2View::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-	CRect rect, rect1;
-	GetClientRect(rect);
-
-	pDC->GetClipBox(&rect1);
-
-	oldBitmap = memDC->SelectObject(bitmap);
-	CGdiObject* old = memDC->SelectStockObject(WHITE_BRUSH);
-	CGdiObject* oldPen = memDC->SelectStockObject(WHITE_PEN);
-	memDC->Rectangle(rect);
-	memDC->SelectObject(oldPen);
-
+	CRect rect;
 	CPtrList* list = &pDoc->getObject();
 
 	POSITION pos = list->GetHeadPosition();
 	while (pos != NULL) {
-		((Object_Draw*)list->GetNext(pos))->Draw(memDC);
+		((Object_Draw*)list->GetNext(pos))->Draw(&memDC);
 	}
 
-	pDC->BitBlt(0, 0, m_rect.bottom, m_rect.right, memDC, 0, 0, SRCCOPY);
-
-	memDC->SelectObject(old);
-	memDC->SelectObject(oldBitmap);
-
+	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, 0, 0, SRCCOPY);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -238,7 +227,29 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 		case ELLIPSE:
 			if (Writable == FALSE){
 				Writable = TRUE;
+				old_point = cur_point = point;
+				pDoc->getEllipseDraw(TRUE)->addPoint(point);
+				pDoc->Empty = FALSE;
 			}
+			else{
+
+			}
+
+			Drawing = TRUE;
+			break;
+
+		case FREELINE:
+			if (Writable == FALSE){
+				Writable = TRUE;
+				old_point = cur_point = point;
+				pDoc->getFreeLineDraw(TRUE)->addPoint(point);
+				pDoc->Empty = FALSE;
+			}
+			else{
+
+			}
+
+			Drawing = TRUE;
 			break;
 	}
 
@@ -301,6 +312,7 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 		case RECTANGLE:
 			dc.SelectObject(GetStockObject(NULL_BRUSH));
 			dc.SetROP2(R2_NOT);
+			oldPen = (CPen *)dc.SelectObject(&pen);
 			if (pDoc->select != SELECT)
 				oldPen = (CPen*)dc.SelectObject(&pen);
 
@@ -314,6 +326,20 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 			break;
 
 		case ELLIPSE:
+			dc.SelectObject(GetStockObject(NULL_BRUSH));
+			dc.SetROP2(R2_NOT);
+			dc.Ellipse(old_point.x, old_point.y, cur_point.x, cur_point.y);
+			dc.Ellipse(old_point.x, old_point.y, point.x, point.y);
+			cur_point = point;
+			break;
+
+		case FREELINE:
+			dc.SelectObject(GetStockObject(NULL_BRUSH));
+			dc.SetROP2(R2_NOT);
+			dc.MoveTo(old_point);
+			dc.LineTo(point);
+			pDoc->getFreeLineDraw()->addPoint(point);
+			old_point = point;
 			break;
 		}
 	}
@@ -393,6 +419,17 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 
 	case ELLIPSE:
 		Writable = FALSE;
+		dc.Ellipse(old_point.x, old_point.y, point.x, point.y);
+		pDoc->getEllipseDraw()->addPoint(point);
+		pDoc->RE_Empty = FALSE;
+		break;
+
+	case FREELINE:
+		Writable = FALSE;
+		dc.MoveTo(old_point);
+		dc.LineTo(point);
+		pDoc->getFreeLineDraw()->addPoint(point);
+		pDoc->RE_Empty = FALSE;
 		break;
 	}
 
@@ -400,7 +437,7 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 	CView::OnLButtonUp(nFlags, point);
 }
 
-
+//더블클릭(POLYLINE종료)
 void CWinProg2View::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
@@ -414,12 +451,11 @@ void CWinProg2View::OnLButtonDblClk(UINT nFlags, CPoint point)
 		Writable = FALSE;
 
 	}
-	Invalidate();
 
 	CView::OnLButtonDblClk(nFlags, point);
 }
 
-
+//마우스 커서 변경(그리기도구선택 -> 십자모양커서)
 BOOL CWinProg2View::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
@@ -441,4 +477,12 @@ BOOL CWinProg2View::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	return CView::OnSetCursor(pWnd, nHitTest, message);
 }
 
+//화면전체지우기
+void CWinProg2View::OnDeleteall()
+{
+	CWinProg2Doc* pDoc = GetDocument();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
+	pDoc->m_Object.RemoveAll();
+	Invalidate();
+}
