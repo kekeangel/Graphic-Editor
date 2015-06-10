@@ -59,6 +59,7 @@ public:
 	afx_msg void OnUpdateBold5(CCmdUI *pCmdUI);
 	afx_msg void OnBold6();
 	afx_msg void OnUpdateBold6(CCmdUI *pCmdUI);
+	afx_msg void OnFillcolor();
 };
 
 extern CWinProg2App theApp;

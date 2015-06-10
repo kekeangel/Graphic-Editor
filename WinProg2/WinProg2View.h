@@ -17,18 +17,17 @@ public:
 
 // 작업입니다.
 public:
-	CRect m_rect;
-	BOOL Drawing;
-	BOOL Writable;
-	BOOL Obj_select;
+	CRect m_rect, select_rect;
+	BOOL Drawing, Writable;
 	CPoint old_point;
 	CPoint cur_point;
-	//CPoint point;
-	
+	POSITION tmp_pos;
+	CPoint top, bottom;
+	Command cmd;
 
 	CDC memDC;
 	CBitmap bitmap, *pOldbitmap;
-
+	CRectTracker* m_Tracker;
 
 // 재정의입니다.
 public:
@@ -63,9 +62,10 @@ public:
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	virtual void OnInitialUpdate();
 	afx_msg void OnDeleteall();
-	// m_Object에 있는 데이터의 종류 파악 및 m_Cur에 저장
-	void ret_ListData(Select select);
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	void select_DrawObj(CPoint point);
+	void move_Object();
+	afx_msg void OnObjectDelete();
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

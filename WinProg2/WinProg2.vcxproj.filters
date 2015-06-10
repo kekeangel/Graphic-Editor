@@ -63,6 +63,12 @@
     <ClInclude Include="FillDraw.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TextEdit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinProg2.cpp">
@@ -104,6 +110,9 @@
     <ClCompile Include="FillDraw.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TextEdit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="WinProg2.reg" />
@@ -135,16 +144,7 @@
     <Image Include="res\User_Toolbar.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Win98.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I007c_0409.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="res\icon1.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I0062_0409.ico">
+    <Image Include="..\..\..\..\..\Desktop\YKPainter\YKPainter\res\Toolbar.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

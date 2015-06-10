@@ -113,6 +113,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextBox.h" />
+    <ClInclude Include="TextEdit.h" />
+    <ClInclude Include="typedef.h" />
     <ClInclude Include="WinProg2.h" />
     <ClInclude Include="WinProg2Doc.h" />
     <ClInclude Include="WinProg2View.h" />
@@ -131,6 +133,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="TextEdit.cpp" />
     <ClCompile Include="WinProg2.cpp" />
     <ClCompile Include="WinProg2Doc.cpp" />
     <ClCompile Include="WinProg2View.cpp" />
@@ -143,10 +146,7 @@
     <ResourceCompile Include="WinProg2.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I0062_0409.ico" />
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Vista\imageres.dll_I007c_0409.ico" />
-    <Image Include="..\..\..\..\..\Desktop\컴퓨터\icons\Win98.ico" />
-    <Image Include="res\icon1.ico" />
+    <Image Include="..\..\..\..\..\Desktop\YKPainter\YKPainter\res\Toolbar.bmp" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
     <Image Include="res\User_Toolbar.bmp" />

@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(CWinProg2App, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_Bold5, &CWinProg2App::OnUpdateBold5)
 	ON_COMMAND(ID_Bold6, &CWinProg2App::OnBold6)
 	ON_UPDATE_COMMAND_UI(ID_Bold6, &CWinProg2App::OnUpdateBold6)
+	ON_COMMAND(ID_FillColor, &CWinProg2App::OnFillcolor)
 END_MESSAGE_MAP()
 
 
@@ -248,10 +249,14 @@ void CWinProg2App::OnFont()
 
 	CFontDialog dlg;
 	if (dlg.DoModal() == IDOK){
-		pDoc->fontcolor = dlg.GetColor();
-
-		dlg.GetCurrentFont(&pDoc->lf);
-		pDoc->fontsize = dlg.GetSize();
+		pDoc->font_style.fontsize = dlg.GetSize();
+		pDoc->font_style.font_color = dlg.GetColor();
+		dlg.GetCurrentFont(&pDoc->font_style.lf);
+		pDoc->font_style.isBold = dlg.IsBold();
+		pDoc->font_style.isItalic = dlg.IsItalic();
+		pDoc->font_style.isStrikeout = dlg.IsStrikeOut();
+		pDoc->font_style.isUnderline = dlg.IsUnderline();
+		
 	}
 }
 
@@ -492,4 +497,16 @@ void CWinProg2App::OnUpdateBold6(CCmdUI *pCmdUI)
 	}
 	else
 		pCmdUI->SetCheck(0);
+}
+
+
+void CWinProg2App::OnFillcolor()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CColorDialog dlg(RGB(255, 0, 0), CC_FULLOPEN);
+	dlg.DoModal();
+	pDoc->color = dlg.GetColor();
+
 }

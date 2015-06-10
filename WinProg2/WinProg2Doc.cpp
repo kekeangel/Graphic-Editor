@@ -11,6 +11,7 @@
 
 #include "WinProg2Doc.h"
 #include "MainFrm.h"
+#include "WinProg2View.h"
 
 #include <propkey.h>
 
@@ -46,7 +47,6 @@ CWinProg2Doc::CWinProg2Doc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	select = EMPTY;
-	color = fontcolor =  RGB(0, 0, 0);
 	bold = ONE;
 	index = 0;
 	Empty = TRUE;
@@ -54,7 +54,7 @@ CWinProg2Doc::CWinProg2Doc()
 	str = _T("");
 	pen_type = PS_SOLID;
 	start = FALSE;
-	fontsize = 15;
+	Obj_select = FALSE;
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -173,7 +173,7 @@ PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
 	}
 
 	//기존 값의 위치를 얻는 경우
-	if (m_Cur != NULL && (select == POLYLINE || select == LINE)) {
+	if (m_Cur != NULL && (select == POLYLINE || select == LINE || tmp_select == POLYLINE || tmp_select == LINE)) {
 		return (PolyLine*)m_Cur;
 	}
 	return NULL;
@@ -190,7 +190,7 @@ RectAngle* CWinProg2Doc::getRectDraw(BOOL isNew){
 	}
 
 	//기존 값의 위치를 얻을 때
-	if (m_Cur != NULL && select == RECTANGLE)
+	if (m_Cur != NULL && (select == RECTANGLE || tmp_select == RECTANGLE))
 		return (RectAngle*)m_Cur;
 
 	return NULL;
@@ -207,7 +207,7 @@ TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
 	}
 
 	//기존 값 위치 얻음
-	if (m_Cur != NULL && select == TEXT){
+	if (m_Cur != NULL && (select == TEXT || tmp_select == TEXT)){
 		return (TextBox*)m_Cur;
 	}
 
@@ -223,7 +223,7 @@ ELLipse* CWinProg2Doc::getEllipseDraw(BOOL isNew){
 	}
 
 	//기존 값 위치 얻음
-	if (m_Cur != NULL && select == ELLIPSE){
+	if (m_Cur != NULL && (select == ELLIPSE || tmp_select == ELLIPSE)){
 		return (ELLipse*)m_Cur;
 	}
 
@@ -417,16 +417,27 @@ void CWinProg2Doc::OnUpdateEllipse(CCmdUI *pCmdUI)
 void CWinProg2Doc::OnSelectobject()
 {
 	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+
 	CString strg;
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
 	if (select != SELECT){
 		select = SELECT;
 		strg = _T("개체선택");
+
+		pView->m_Tracker = new CRectTracker();
+
+		pView->m_Tracker->m_rect = pView->select_rect;
+		pView->m_Tracker->m_nStyle = CRectTracker::hatchInside;
+		pView->m_Tracker->m_nStyle = CRectTracker::resizeInside;
+
 		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
 	}
 	else{
 		select = EMPTY;
+		delete pView->m_Tracker;
+		pView->m_Tracker = NULL;
 		strg.LoadStringW(ID_INDICATOR_TOOL);
 		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
 	}

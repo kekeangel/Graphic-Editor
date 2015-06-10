@@ -10,18 +10,24 @@ public:
 
 	virtual void Draw(CDC* pDc);
 
-	COLORREF color, m_color;
-	Bold bold, m_bold;
+	COLORREF m_line_color, m_fill_color;
+	Bold m_bold;
 	UINT m_pen_type;
+	Select m_select;
 
 	CList<CPoint, CPoint> m_points;
 	CList<CPoint, CPoint&> del_points;
 
 	void addPoint(CPoint& point);
 
-	void setPencel(int nWidth, COLORREF rgbColor);
+	void setPencil(Bold bold, UINT pen_type, COLORREF color);
+	void setFillColor(COLORREF color);
+	void setDrawType(Select select);
 	void delPoint();
 
+	void movePoint(int t_x, int t_y, int b_x, int b_y);
+
+	virtual Select getDrawType();
 	virtual BOOL getselectPoint(CPoint top, CPoint bottom);
 };
 

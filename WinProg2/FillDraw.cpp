@@ -31,3 +31,11 @@ void FillDraw::setColor(COLORREF& color) {
 BOOL FillDraw::getselectPoint(CPoint a, CPoint b){
 	return FALSE;
 }
+
+Select FillDraw::getDrawType(){
+	return m_select;
+}
+
+void FillDraw::setDrawType(Select select){
+	m_select = select;
+}

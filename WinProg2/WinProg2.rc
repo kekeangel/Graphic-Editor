@@ -127,6 +127,8 @@ BEGIN
     BUTTON      ID_Font
     BUTTON      ID_Color
     BUTTON      ID_DeleteAll
+    BUTTON      ID_BUTTON32844
+    BUTTON      ID_BUTTON32845
 END
 
 
@@ -193,7 +195,7 @@ BEGIN
         MENUITEM "인쇄 미리 보기(&V)",                ID_FILE_PRINT_PREVIEW
         MENUITEM "인쇄 설정(&R)...",                ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
-        MENUITEM "최근에 사용한 파일",                  ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM "최근에 사용한 파일",                  ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "끝내기(&X)",                     ID_APP_EXIT
     END
@@ -248,7 +250,8 @@ BEGIN
     END
     POPUP "그리기 속성(&R)"
     BEGIN
-        MENUITEM "색상",                          ID_Color
+        MENUITEM "선 색상",                        ID_Color
+        MENUITEM "채우기 색상",                      ID_FillColor
         MENUITEM "글꼴",                          ID_Font
         POPUP "선 종류"
         BEGIN
@@ -282,6 +285,7 @@ BEGIN
         MENUITEM "잘라내기(&T)\tCtrl+X",            ID_EDIT_CUT
         MENUITEM "복사(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "붙여넣기(&P)\tCtrl+V",            ID_EDIT_PASTE
+        MENUITEM "삭제(&D)",                      ID_Object_Delete
     END
 END
 
@@ -340,6 +344,18 @@ BEGIN
     DEFPUSHBUTTON   "확인",IDOK,113,41,50,14,WS_GROUP
 END
 
+IDD_TEXTEDIT DIALOGEX 0, 0, 217, 109
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "TextBox Edit"
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "문자열을 입력하십시오",IDC_STATIC,69,23,72,8
+    EDITTEXT        IDC_EDIT1,21,37,174,30,ES_AUTOHSCROLL,WS_EX_STATICEDGE
+    DEFPUSHBUTTON   "확인",IDOK,21,90,50,12
+    PUSHBUTTON      "취소",IDCANCEL,84,90,50,12
+    PUSHBUTTON      "글꼴속성",IDC_PROPERTY,145,90,50,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -394,6 +410,14 @@ BEGIN
         RIGHTMARGIN, 163
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
+    END
+
+    IDD_TEXTEDIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 210
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 102
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -548,7 +572,7 @@ BEGIN
     ID_DrawPoly             "PolyLine을 그립니다.\nPolyline"
     ID_TextBox              "문자열을 입력할 수 있는 상자를 만듭니다.\n텍스트상자"
     ID_ELLipse              "타원을 그립니다.\n타원"
-    ID_Color                "색상을 설정합니다.\n색상"
+    ID_Color                "선의 색상을 설정합니다.\n선 색상"
     ID_Font                 "글꼴을 설정합니다.\n글꼴"
     ID_PS_SOLID             "선의 종류를 실선으로 설정합니다.\n실선"
 END
@@ -571,6 +595,7 @@ BEGIN
     ID_32836                "화면 전체를 지웁니다\n전체지우기"
     ID_DeleteAll            "화면 전체를 지웁니다.\n전체 지우기"
     ID_FreeLine             "자유곡선을 그립니다.\n자유곡선"
+    ID_Object_Delete        "객체 전체를 지웁니다.\n삭제"
 END
 
 #endif    // 한국어(대한민국) resources

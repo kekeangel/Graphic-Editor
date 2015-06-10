@@ -12,6 +12,7 @@
 #include "WinProg2Doc.h"
 #include "WinProg2View.h"
 #include "MainFrm.h"
+#include "TextEdit.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -36,6 +37,7 @@ BEGIN_MESSAGE_MAP(CWinProg2View, CView)
 	ON_WM_SETCURSOR()
 	ON_COMMAND(ID_DeleteAll, &CWinProg2View::OnDeleteall)
 	ON_WM_CHAR()
+	ON_COMMAND(ID_Object_Delete, &CWinProg2View::OnObjectDelete)
 END_MESSAGE_MAP()
 
 // CWinProg2View 생성/소멸
@@ -47,7 +49,9 @@ CWinProg2View::CWinProg2View()
 	Drawing = FALSE;
 	Writable = FALSE;
 	pOldbitmap = NULL;
-	Obj_select = FALSE;
+	top = bottom = 0;
+	m_Tracker = NULL; 
+	cmd = NONE;
 }
 
 CWinProg2View::~CWinProg2View()
@@ -80,6 +84,13 @@ void CWinProg2View::OnInitialUpdate()
 	pOldbitmap = memDC.SelectObject(&bitmap);
 	memDC.PatBlt(0, 0, m_rect.Width(), m_rect.Height(), WHITENESS);
 
+	
+	//memDC.BitBlt(0, 0, m_rect.Width(), m_rect.Height(), &dc, 0, 0, SRCCOPY);
+	//m_Tracker = new CRectTracker;
+	//m_Tracker->m_rect = select_rect;
+	//m_Tracker->m_nStyle = CRectTracker::hatchInside;
+	//m_Tracker->m_nStyle = CRectTracker::resizeInside;
+
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
 
@@ -100,6 +111,13 @@ void CWinProg2View::OnDraw(CDC* pDC)
 	while (pos != NULL) {
 		((Object_Draw*)list->GetNext(pos))->Draw(pDC);
 	}
+	if (m_Tracker){
+		if ((m_Tracker->m_rect.Width() > 0) && (m_Tracker->m_rect.Height() > 0)){
+				m_Tracker->Draw(pDC);
+			}
+	}
+	
+		
 
 	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), pDC, 0, 0, SRCCOPY);
 
@@ -180,13 +198,68 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 	CPen pen(pDoc->pen_type, pDoc->bold, RGB(0, 0, 0));
 	CPen *oldPen = dc.SelectObject(&pen);
 	COLORREF p_color;
+
 	switch (pDoc->select){
 		case SELECT:
-			if (Writable == FALSE){
-				Writable = TRUE;
-				old_point = cur_point = point;
-				pDoc->Empty = FALSE;
+			
+			//범위설정
+			if (m_Tracker->HitTest(point) < 0){
+				CRectTracker track;
+
+				if (track.TrackRubberBand(this, point, TRUE)){
+					track.m_rect.NormalizeRect();
+					m_Tracker->m_rect = track.m_rect;
+					
+					top.x = track.m_rect.left;
+					top.y = track.m_rect.top;
+					bottom.x = track.m_rect.right;
+					bottom.y = track.m_rect.bottom;
+
+
+					old_point = top;
+					cur_point = bottom;
+
+					Writable = TRUE;
+					pDoc->Empty = FALSE;
+					Drawing = FALSE;
+
+					cmd = NONE;
+					select_DrawObj(point);
+
+				}
+				else{
+					m_Tracker->m_rect = CRect(0, 0, 0, 0);
+					Writable = FALSE;
+				}
 			}
+			else{
+				if (m_Tracker->Track(this, point, true)){
+					m_Tracker->m_rect.NormalizeRect();
+
+					top.x = m_Tracker->m_rect.left;
+					top.y = m_Tracker->m_rect.top;
+					bottom.x = m_Tracker->m_rect.right;
+					bottom.y = m_Tracker->m_rect.bottom;
+
+					Writable = TRUE;
+					Drawing = TRUE;
+					pDoc->Empty = FALSE;
+
+					cmd = MOVE;
+
+					select_DrawObj(point);
+
+					old_point = top;
+					cur_point = bottom;
+					Invalidate();
+				}
+				else{
+					m_Tracker->m_rect = CRect(0, 0, 0, 0);
+					Writable = FALSE;
+				}
+			}
+
+			Invalidate();
 			break;
 
 		case FILL:
@@ -204,13 +277,12 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 				Writable = TRUE;
 				old_point = cur_point = point;
 				pDoc->getPolyLineDraw(TRUE)->addPoint(FALSE, point);
-				pDoc->getPolyLineDraw()->m_color = pDoc->color;
-				pDoc->getPolyLineDraw()->m_bold = pDoc->bold;
-				
+				pDoc->getPolyLineDraw()->setPencil(pDoc->bold, pDoc->pen_type, pDoc->color);
+				pDoc->getPolyLineDraw()->setDrawType(pDoc->select);
 				pDoc->Empty = FALSE;
 			}
 			else{
-				
+
 			}
 			Drawing = TRUE;
 			break;
@@ -222,10 +294,17 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 			if (Writable == FALSE){
 				Writable = TRUE;
 				old_point = cur_point = point;
-				if (pDoc->select == RECTANGLE)
+				if (pDoc->select == RECTANGLE){
 					pDoc->getRectDraw(TRUE)->addPoint(point);
-				else if (pDoc->select == TEXT)
+					pDoc->getRectDraw()->setPencil(pDoc->bold, pDoc->pen_type, pDoc->color);
+					pDoc->getRectDraw()->setDrawType(pDoc->select);
+				}
+				else if (pDoc->select == TEXT){
 					pDoc->getTextBoxDraw(TRUE)->addPoint(point);
+					pDoc->getTextBoxDraw()->setPencil(pDoc->bold, pDoc->pen_type, pDoc->color);
+					pDoc->getTextBoxDraw()->setDrawType(pDoc->select);
+
+				}
 				pDoc->Empty = FALSE;
 			}
 			else{
@@ -239,6 +318,8 @@ void CWinProg2View::OnLButtonDown(UINT nFlags, CPoint point)
 				Writable = TRUE;
 				old_point = cur_point = point;
 				pDoc->getEllipseDraw(TRUE)->addPoint(point);
+				pDoc->getEllipseDraw()->setPencil(pDoc->bold, pDoc->pen_type, pDoc->color);
+				pDoc->getEllipseDraw()->setDrawType(pDoc->select);
 				pDoc->Empty = FALSE;
 			}
 			else{
@@ -293,7 +374,7 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 
 
 	if (Writable == TRUE){
-		CPen pen;/* (PS_SOLID, pDoc->bold, RGB(0 ^ 255, 0 ^ 255, 0 ^ 255));*/
+		CPen pen;
 		pen.CreatePen(PS_SOLID, pDoc->bold, pDoc->color);
 		dc.SelectObject(GetStockObject(NULL_BRUSH));
 		dc.SetROP2(R2_NOT);
@@ -312,12 +393,13 @@ void CWinProg2View::OnMouseMove(UINT nFlags, CPoint point)
 			dc.LineTo(point);
 			cur_point = point;
 
-			break;
-		case TEXT:
-			//Rectangle에서 처리
+			break;	
 
 		case SELECT:
-			//Rectangle에서 처리
+
+			break;
+		case TEXT:
+					//Rectangle에서 처리
 
 		case RECTANGLE:
 			dc.SelectObject(GetStockObject(NULL_BRUSH));
@@ -365,20 +447,14 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 	CClientDC dc(this);
 	CPen pen;
 	CRect rect, text_rect;
-	//StringDlg dlg(pDoc->str);
+	TextEdit dlg(pDoc->str);
 	CFont font;
-	POSITION Obj_pos;
-	CPtrList* list = &pDoc->getObject();
 
 	pen.CreatePen(pDoc->pen_type, pDoc->bold, pDoc->color);
 	dc.SelectObject(&pen);
 
-	CPen select_pen(PS_DASH, 1, RGB(0, 0, 0));
+	CPen select_pen(PS_DASH, 3, RGB(255, 0, 0));
 
-	Object_Draw* Cur;
-	Select ch_select;
-
-	SetCapture();
 	switch (pDoc->select){
 	case LINE:
 		dc.MoveTo(old_point);
@@ -387,7 +463,6 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 		Writable = FALSE;
 		pDoc->RE_Empty = FALSE;
 		Invalidate();
-		::ReleaseCapture();
 		break;
 
 	case POLYLINE:
@@ -397,19 +472,7 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 		break;
 
 	case SELECT:
-
-		Obj_pos = list->GetHeadPosition();
-		while (Obj_pos != NULL) {
-			BOOL OK;
-			OK = ((Object_Draw*)list->GetNext(Obj_pos))->getselectPoint(old_point, point);
-			if (OK == TRUE){
-				Obj_select = TRUE;
-				break;
-			}
-				
-			
-		}
-
+		Invalidate();
 		break;
 
 	case TEXT:
@@ -436,19 +499,16 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 
 			dc.Rectangle(&rect);
 			
-			//dlg.DoModal();
+			dlg.DoModal();
 
-			font.CreateFontIndirectW(&pDoc->lf);
-			dc.SetTextColor(pDoc->fontcolor);
+			font.CreateFontIndirectW(&pDoc->font_style.lf);
+			//dc.SetTextColor(pDoc->font_style.font_color);
 			dc.SelectObject(&font);
 			old_point.x += 5;
 			old_point.y += 5;
-			
-			CreateSolidCaret(1, pDoc->fontsize);
-			SetCaretPos(old_point);
-			ShowCaret();
 
-//			dc.DrawText(pDoc->m_str.GetData(), &text_rect, DT_LEFT);
+			dc.SelectObject(&font);
+			dc.DrawText(pDoc->str, &text_rect, DT_LEFT);
 			pDoc->getTextBoxDraw()->addPoint(point);
 			pDoc->RE_Empty = FALSE;
 			pDoc->m_select.AddTail(TEXT);
@@ -461,7 +521,6 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 			Invalidate();
 
 		}
-		::ReleaseCapture();
 		Writable = FALSE;
 		break;
 
@@ -472,7 +531,6 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 		pDoc->RE_Empty = FALSE;
 		pDoc->m_select.AddTail(ELLIPSE);
 		Invalidate();
-		::ReleaseCapture();
 		break;
 
 	case FREELINE:
@@ -483,7 +541,6 @@ void CWinProg2View::OnLButtonUp(UINT nFlags, CPoint point)
 		pDoc->RE_Empty = FALSE;
 		pDoc->m_select.AddTail(FREELINE);
 		Invalidate();
-		::ReleaseCapture();
 		break;
 	}
 
@@ -505,7 +562,6 @@ void CWinProg2View::OnLButtonDblClk(UINT nFlags, CPoint point)
 		pDoc->m_select.AddTail(POLYLINE);
 		Invalidate();
 	}
-	::ReleaseCapture();
 	CView::OnLButtonDblClk(nFlags, point);
 }
 
@@ -522,9 +578,10 @@ BOOL CWinProg2View::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		if (Writable == TRUE && pDoc->select != SELECT){
 			::SetCursor(LoadCursor(NULL, IDC_CROSS));
 		}
-		else if (Writable == TRUE && pDoc->select == SELECT){
-			::SetCursor(LoadCursor(NULL, IDC_HAND));
-		}
+
+		else if (Writable == TRUE && pDoc->select == SELECT &&
+			m_Tracker->SetCursor(this, nHitTest))
+			return TRUE;
 
 		else{
 			::SetCursor(LoadCursor(NULL, IDC_ARROW));
@@ -546,39 +603,6 @@ void CWinProg2View::OnDeleteall()
 	Invalidate();
 }
 
-
-// m_Object에 있는 데이터의 종류 파악 및 m_Cur에 저장
-void CWinProg2View::ret_ListData(Select select)
-{
-	CWinProg2Doc* pDoc = GetDocument();
-
-	switch (select){
-		case POLYLINE:
-			//LINE에서 처리
-
-		case LINE:
-			pDoc->m_Cur = (PolyLine*)pDoc->m_Cur;
-			break;
-
-		case TEXT:
-			//RECTANGLE에서 처리
-
-		case RECTANGLE:
-			pDoc->m_Cur = (RectAngle*)pDoc->m_Cur;
-			break;
-
-		case ELLIPSE:
-			pDoc->m_Cur = (ELLipse*)pDoc->m_Cur;
-			break;
-
-		case FREELINE:
-			pDoc->m_Cur = (FreeLine*)pDoc->m_Cur;
-			break;
-
-	}
-}
-
-
 void CWinProg2View::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	CWinProg2Doc* pDoc = GetDocument();
@@ -594,4 +618,97 @@ void CWinProg2View::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	Invalidate();
 	CView::OnChar(nChar, nRepCnt, nFlags);
+}
+
+//도형객체선택
+void CWinProg2View::select_DrawObj(CPoint point){
+	CWinProg2Doc* pDoc = GetDocument();
+
+	POSITION Obj_pos, prev_Obj_pos;
+	CPtrList* list = &pDoc->getObject();
+	CPoint tmp_top, tmp_bottom;
+	
+	BOOL OK;
+
+	Obj_pos = list->GetHeadPosition();
+	prev_Obj_pos = list->GetHeadPosition();
+	
+	while (Obj_pos != NULL) {
+		OK = ((Object_Draw*)list->GetNext(Obj_pos))->getselectPoint(old_point, cur_point);
+	
+		if (OK == TRUE){
+			pDoc->Obj_select = TRUE;
+
+			pDoc->tmp_select = ((Object_Draw*)list->GetAt(prev_Obj_pos))->getDrawType();
+
+			switch (cmd){
+				case NONE:
+					return;
+
+				case MOVE:
+					move_Object();
+					break;
+
+				case DEL:
+					list->RemoveAt(prev_Obj_pos);
+					Invalidate();
+					break;
+
+				case RESIZE:
+
+					break;
+			}
+		}
+		(Object_Draw*)list->GetNext(prev_Obj_pos);
+
+	}
+}
+
+//객체 전체 이동함수
+void CWinProg2View::move_Object(){
+	CWinProg2Doc* pDoc = GetDocument();
+
+	int top_x, top_y, bot_x, bot_y;
+	top_x = top_y = bot_x = bot_y = 0;
+
+	top_x = old_point.x - top.x;
+	top_y = old_point.y - top.y;
+	bot_x = cur_point.x - bottom.x;
+	bot_y = cur_point.y - bottom.y;
+
+	switch (pDoc->tmp_select){
+	case LINE:
+		
+		pDoc->getPolyLineDraw()->movePoint(top_x, top_y, bot_x, bot_y);
+		break;
+
+	case POLYLINE:
+		pDoc->getPolyLineDraw()->movePoint(top_x, top_y, bot_x, bot_y);
+		break;
+
+	case RECTANGLE:
+		pDoc->getRectDraw()->movePoint(top_x, top_y, bot_x, bot_y);
+		break;
+
+	case ELLIPSE:
+		pDoc->getEllipseDraw()->movePoint(top_x, top_y, bot_x, bot_y);
+		break;
+
+	case TEXT:
+		pDoc->getTextBoxDraw()->movePoint(top_x, top_y, bot_x, bot_y);
+		break;
+	}
+}
+
+//팝업메뉴 삭제메뉴
+void CWinProg2View::OnObjectDelete()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	ScreenToClient(&point);
+
+	cmd = DEL;
+	select_DrawObj(point);
+
 }

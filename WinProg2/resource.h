@@ -31,6 +31,10 @@
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define IDS_EDIT_MENU                   306
+#define IDD_TEXTEDIT                    310
+#define IDC_EDIT1                       1000
+#define IDC_BUTTON1                     1001
+#define IDC_PROPERTY                    1001
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -79,14 +83,20 @@
 #define ID_DeleteAll                    32837
 #define ID_32838                        32838
 #define ID_FreeLine                     32840
+#define ID_32841                        32841
+#define ID_FillColor                    32842
+#define ID_BUTTON32844                  32844
+#define ID_BUTTON32845                  32845
+#define ID_32846                        32846
+#define ID_Object_Delete                32847
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        331
-#define _APS_NEXT_COMMAND_VALUE         32841
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           310
+#define _APS_NEXT_RESOURCE_VALUE        334
+#define _APS_NEXT_COMMAND_VALUE         32848
+#define _APS_NEXT_CONTROL_VALUE         1002
+#define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

@@ -8,12 +8,10 @@
 #include "ELLipse.h"
 #include "FreeLine.h"
 #include "FillDraw.h"
+#include "typedef.h"
 
 #pragma once
 
-enum Select{
-	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, FREELINE, EMPTY, SELECT, FILL
-};
 
 
 class CWinProg2Doc : public CDocument
@@ -30,8 +28,8 @@ public:
 
 // 작업입니다.
 public:
-	Select select;
-	COLORREF color, fontcolor;
+	Select select, tmp_select;
+	COLORREF color;
 	//LINE, POLYLINE 생성함수
 	PolyLine* getPolyLineDraw(BOOL isNew = FALSE);
 	//RECTANGLE 생성함수
@@ -48,13 +46,15 @@ public:
 	CPtrList& getObject();
 
 	Bold bold;
-	int index, fontsize = 10;
+	int index;
 	UINT pen_type;
 	BOOL Empty, RE_Empty, start;
 	CString str;
 	CFont font;
-	LOGFONT lf;
 	CArray<TCHAR, TCHAR> m_str;
+	BOOL Obj_select;
+
+	style font_style;
 
 // 재정의입니다.
 public:

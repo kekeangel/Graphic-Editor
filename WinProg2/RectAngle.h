@@ -7,22 +7,30 @@ public:
 	RectAngle();
 	virtual ~RectAngle();
 
-protected:
 	CList<CPoint, CPoint> m_points;
 	CList<CPoint, CPoint&> del_points;
-	COLORREF m_color;
-	CRect text_rect;
+
+	COLORREF m_line_color, m_font_color, m_fill_color;
+	Select m_select;
+	Bold m_bold;
 	CPoint text_point;
+	UINT m_pen_type;
 	CPoint m_top, m_bottom;
+	CRect rect, text_rect;
 
 public:
 	virtual void Draw(CDC* pDC);
 	void addPoint(CPoint& point);
-	void setPencel(int nWidth, COLORREF rgbColor);
+
+	void setDrawType(Select select);
+	void setPencil(Bold bold, UINT pen_type, COLORREF color);
+	void setFillColor(COLORREF color);
 
 	void setPoint(CPoint& point);
 	void setRect(CPoint& topLeft, CPoint& bottomRight);
+	void movePoint(int t_x, int t_y, int b_x, int b_y);
 
+	virtual Select getDrawType();
 	virtual BOOL getselectPoint(CPoint top, CPoint bottom);
 };
 
