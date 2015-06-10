@@ -248,7 +248,7 @@ void CWinProg2App::OnFont()
 
 	CFontDialog dlg;
 	if (dlg.DoModal() == IDOK){
-		pDoc->color = dlg.GetColor();
+		pDoc->fontcolor = dlg.GetColor();
 
 		dlg.GetCurrentFont(&pDoc->lf);
 		pDoc->fontsize = dlg.GetSize();

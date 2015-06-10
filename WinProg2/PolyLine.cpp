@@ -6,10 +6,10 @@
 
 PolyLine::PolyLine()
 {
-	m_color = RGB(0, 0, 0);
-	bold = ONE;
-	m_bold = ONE;
-	m_pen_type = PS_SOLID;
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	m_color = pDoc->color;
+	m_pen_type = pDoc->pen_type;
+	m_bold = pDoc->bold;
 }
 
 
@@ -19,6 +19,7 @@ PolyLine::~PolyLine()
 
 void PolyLine::Draw(CDC *pDC){
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	m_color = pDoc->color;
 	m_pen_type = pDoc->pen_type;
 	m_bold = pDoc->bold;
@@ -29,7 +30,7 @@ void PolyLine::Draw(CDC *pDC){
 
 	CPoint p1, p2;
 	p1 = m_points.GetNext(pos);
-
+	pDC->SelectObject(&pen);
 	while (pos != NULL) {
 		p2 = m_points.GetNext(pos);
 
@@ -66,12 +67,6 @@ void PolyLine::delPoint(){
 	
 }
 
-CPoint PolyLine::getPoint(BOOL isDel){
-	if (isDel){
-		
-		return del_points.GetHead();
-	}
-	else{
-		return m_points.GetTail();
-	}
+BOOL PolyLine::getselectPoint(CPoint top, CPoint bottom){
+	return NULL;
 }

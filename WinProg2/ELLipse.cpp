@@ -42,12 +42,18 @@ void ELLipse::setPencel(int nWidth, COLORREF rgbColor){
 	m_color = rgbColor;
 }
 
-CPoint ELLipse::getPoint(BOOL isDel){
-	if (isDel){
+BOOL ELLipse::getselectPoint(CPoint top, CPoint bottom){
+	POSITION pos = m_points.GetHeadPosition();
+	CPoint p1, p2;
+	p1 = m_points.GetNext(pos);
+	while (pos != NULL) {
+		p2 = m_points.GetNext(pos);
+		if (p1.x >= top.x && p1.x <= bottom.x){
+			if (p2.y >= top.y && p2.y <= bottom.y)
+				return TRUE;
 
-		return del_points.GetHead();
+		}
+		p1 = p2;
 	}
-	else{
-		return m_points.GetTail();
-	}
+	return FALSE;
 }

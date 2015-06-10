@@ -103,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ELLipse.h" />
+    <ClInclude Include="FillDraw.h" />
     <ClInclude Include="FreeLine.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Object_Draw.h" />
@@ -119,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ELLipse.cpp" />
+    <ClCompile Include="FillDraw.cpp" />
     <ClCompile Include="FreeLine.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Object_Draw.cpp" />

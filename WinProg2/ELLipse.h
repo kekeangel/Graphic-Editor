@@ -18,8 +18,10 @@ public:
 	CList<CPoint, CPoint&> del_points;
 
 	void addPoint(CPoint& point);
+
 	void setPencel(int nWidth, COLORREF rgbColor);
 	void delPoint();
-	CPoint getPoint(BOOL isDel);
+
+	virtual BOOL getselectPoint(CPoint top, CPoint bottom);
 };
 

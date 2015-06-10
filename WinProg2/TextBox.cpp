@@ -50,3 +50,7 @@ void TextBox::addPoint(CPoint& point){
 void TextBox::setPencil(int nWidth, COLORREF rgbColor){
 	color = rgbColor;
 }
+
+BOOL TextBox::getselectPoint(CPoint top, CPoint bottom){
+	return NULL;
+}

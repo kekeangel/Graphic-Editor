@@ -46,7 +46,7 @@ CWinProg2Doc::CWinProg2Doc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	select = EMPTY;
-	color = RGB(0, 0, 0);
+	color = fontcolor =  RGB(0, 0, 0);
 	bold = ONE;
 	index = 0;
 	Empty = TRUE;
@@ -54,6 +54,7 @@ CWinProg2Doc::CWinProg2Doc()
 	str = _T("");
 	pen_type = PS_SOLID;
 	start = FALSE;
+	fontsize = 15;
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -242,6 +243,20 @@ FreeLine* CWinProg2Doc::getFreeLineDraw(BOOL isNew){
 		return (FreeLine*)m_Cur;
 	}
 
+	return NULL;
+}
+
+FillDraw* CWinProg2Doc::getFillDraw(bool bNew)
+{
+	if (bNew) {
+		m_Cur = new FillDraw();
+		m_Object.AddTail(m_Cur);
+
+		return (FillDraw*)m_Cur;
+	}
+	if (m_Cur != NULL && select == FILL) {
+		return (FillDraw*)m_Cur;
+	}
 	return NULL;
 }
 

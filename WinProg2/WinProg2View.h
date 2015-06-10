@@ -20,9 +20,11 @@ public:
 	CRect m_rect;
 	BOOL Drawing;
 	BOOL Writable;
+	BOOL Obj_select;
 	CPoint old_point;
 	CPoint cur_point;
 	//CPoint point;
+	
 
 	CDC memDC;
 	CBitmap bitmap, *pOldbitmap;
@@ -61,6 +63,9 @@ public:
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	virtual void OnInitialUpdate();
 	afx_msg void OnDeleteall();
+	// m_Object에 있는 데이터의 종류 파악 및 m_Cur에 저장
+	void ret_ListData(Select select);
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

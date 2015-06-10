@@ -21,5 +21,6 @@ public:
 	void addPoint(BOOL isDel, CPoint& point);
 	void setPencil(int nWidth, COLORREF rgbColor);
 	void delPoint();
-	CPoint getPoint(BOOL isDel);
+
+	virtual BOOL getselectPoint(CPoint top, CPoint bottom);
 };

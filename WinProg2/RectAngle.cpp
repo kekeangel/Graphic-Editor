@@ -30,6 +30,12 @@ void RectAngle::Draw(CDC* pDC){
 
 		pDC->Rectangle(p1.x, p1.y, p2.x, p2.y);
 		p1 = p2;
+
+		if (pDoc->select == TEXT){
+			text_rect.SetRect(p1.x + 5, p1.y + 5, p2.x - 5, p2.y - 5);
+			pDC->DrawText(pDoc->m_str.GetData(), pDoc->m_str.GetSize(), 
+				&text_rect, DT_LEFT);
+		}
 	}
 	pDC->SelectObject(oldPen);
 }
@@ -42,12 +48,15 @@ void RectAngle::setPencel(int nWidth, COLORREF rgbColor){
 	m_color = rgbColor;
 }
 
-CPoint RectAngle::getPoint(BOOL isDel){
-	if (isDel){
+BOOL RectAngle::getselectPoint(CPoint top, CPoint bottom){
+	return NULL;
+}
 
-		return del_points.GetHead();
-	}
-	else{
-		return m_points.GetTail();
-	}
+void RectAngle::setPoint(CPoint& point){
+
+}
+
+void RectAngle::setRect(CPoint& top, CPoint& bottom){
+	m_top = top;
+	m_bottom = bottom;
 }

@@ -7,11 +7,12 @@
 #include "TextBox.h"
 #include "ELLipse.h"
 #include "FreeLine.h"
+#include "FillDraw.h"
 
 #pragma once
 
 enum Select{
-	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, FREELINE, EMPTY, SELECT
+	LINE, POLYLINE, TEXT, RECTANGLE, ELLIPSE, FREELINE, EMPTY, SELECT, FILL
 };
 
 
@@ -25,11 +26,12 @@ protected: // serialization에서만 만들어집니다.
 public:
 	Object_Draw* m_Cur;
 	CPtrList m_Object;
+	CList<Select, Select> m_select;
 
 // 작업입니다.
 public:
 	Select select;
-	COLORREF color;
+	COLORREF color, fontcolor;
 	//LINE, POLYLINE 생성함수
 	PolyLine* getPolyLineDraw(BOOL isNew = FALSE);
 	//RECTANGLE 생성함수
@@ -40,6 +42,8 @@ public:
 	ELLipse* getEllipseDraw(BOOL isNew = FALSE);
 	//FREELINE 생성함수
 	FreeLine* getFreeLineDraw(BOOL isNew = FALSE);
+
+	FillDraw* getFillDraw(bool bNew = FALSE);
 	//작업정보가 저장된 포인터리스트 반환
 	CPtrList& getObject();
 
@@ -50,7 +54,7 @@ public:
 	CString str;
 	CFont font;
 	LOGFONT lf;
-
+	CArray<TCHAR, TCHAR> m_str;
 
 // 재정의입니다.
 public:
