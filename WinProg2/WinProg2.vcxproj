@@ -102,10 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="ELLipse.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Object_Draw.h" />
     <ClInclude Include="PolyLine.h" />
+    <ClInclude Include="RectAngle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -115,10 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="ELLipse.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Object_Draw.cpp" />
     <ClCompile Include="PolyLine.cpp" />
+    <ClCompile Include="RectAngle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
