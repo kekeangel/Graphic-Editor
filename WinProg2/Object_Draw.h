@@ -1,23 +1,19 @@
 #pragma once
+#include "typedef.h"
 
-class Object_Draw : public CObject
+class Object_Draw
 {
 public:
 	Object_Draw();
 	virtual ~Object_Draw();
+
 	virtual void Draw(CDC* pDC) = 0;
 
-protected:
-	
-	CPoint pointStart;
-	CPoint pointEnd;
-
-	int Line_Pattern;
-	int Line_Thin;
-
-	
+	virtual BOOL getselectPoint(CPoint top, CPoint bottom) = 0;
+	virtual Select getDrawType() = 0;
 
 	COLORREF color;
-	//virtual void DrawType(void);
+	Bold bold;
 	
 };
+

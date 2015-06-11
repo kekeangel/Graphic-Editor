@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B68DBD3A-3CF0-421B-86D0-7396E482CE70}</ProjectGuid>
+    <ProjectGuid>{58EA925A-67C6-4552-AD64-B8AD9D7FDEBD}</ProjectGuid>
     <RootNamespace>WinProg2</RootNamespace>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
@@ -102,43 +102,55 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
-    <ClInclude Include="Line.h" />
+    <ClInclude Include="ELLipse.h" />
+    <ClInclude Include="FreeLine.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Object_Draw.h" />
     <ClInclude Include="PolyLine.h" />
+    <ClInclude Include="RectAngle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextBox.h" />
+    <ClInclude Include="TextEdit.h" />
+    <ClInclude Include="typedef.h" />
     <ClInclude Include="WinProg2.h" />
     <ClInclude Include="WinProg2Doc.h" />
     <ClInclude Include="WinProg2View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
-    <ClCompile Include="Line.cpp" />
+    <ClCompile Include="ELLipse.cpp" />
+    <ClCompile Include="FreeLine.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Object_Draw.cpp" />
     <ClCompile Include="PolyLine.cpp" />
+    <ClCompile Include="RectAngle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="TextEdit.cpp" />
     <ClCompile Include="WinProg2.cpp" />
     <ClCompile Include="WinProg2Doc.cpp" />
     <ClCompile Include="WinProg2View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\WinProg2.rc2" />
+    <None Include="WinProg2.reg" />
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="WinProg2.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Desktop\YKPainter\YKPainter\res\Toolbar.bmp" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
+    <Image Include="res\User_Toolbar.bmp" />
     <Image Include="res\WinProg2.ico" />
     <Image Include="res\WinProg2Doc.ico" />
     <Image Include="UserImages.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\WinProg2.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

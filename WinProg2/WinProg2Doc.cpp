@@ -10,6 +10,8 @@
 #endif
 
 #include "WinProg2Doc.h"
+#include "MainFrm.h"
+#include "WinProg2View.h"
 
 #include <propkey.h>
 
@@ -22,20 +24,20 @@
 IMPLEMENT_DYNCREATE(CWinProg2Doc, CDocument)
 
 BEGIN_MESSAGE_MAP(CWinProg2Doc, CDocument)
-	ON_COMMAND(ID_Color, &CWinProg2Doc::OnColor)
-	ON_COMMAND(ID_Font, &CWinProg2Doc::OnFont)
-	ON_COMMAND(ID_Bold_1, &CWinProg2Doc::OnBold1)
-	ON_COMMAND(ID_Bold_2, &CWinProg2Doc::OnBold2)
-	ON_COMMAND(ID_Bold_3, &CWinProg2Doc::OnBold3)
-	ON_COMMAND(ID_Bold_4, &CWinProg2Doc::OnBold4)
-	ON_COMMAND(ID_Bold_5, &CWinProg2Doc::OnBold5)
-	ON_COMMAND(ID_Bold_6, &CWinProg2Doc::OnBold6)
-	ON_UPDATE_COMMAND_UI(ID_Bold_1, &CWinProg2Doc::OnUpdateBold1)
-	ON_UPDATE_COMMAND_UI(ID_Bold_2, &CWinProg2Doc::OnUpdateBold2)
-	ON_UPDATE_COMMAND_UI(ID_Bold_3, &CWinProg2Doc::OnUpdateBold3)
-	ON_UPDATE_COMMAND_UI(ID_Bold_4, &CWinProg2Doc::OnUpdateBold4)
-	ON_UPDATE_COMMAND_UI(ID_Bold_5, &CWinProg2Doc::OnUpdateBold5)
-	ON_UPDATE_COMMAND_UI(ID_Bold_6, &CWinProg2Doc::OnUpdateBold6)
+	ON_COMMAND(ID_Line, &CWinProg2Doc::OnLine)
+	ON_UPDATE_COMMAND_UI(ID_Line, &CWinProg2Doc::OnUpdateLine)
+	ON_COMMAND(ID_RectAngle, &CWinProg2Doc::OnRectangle)
+	ON_UPDATE_COMMAND_UI(ID_RectAngle, &CWinProg2Doc::OnUpdateRectangle)
+	ON_COMMAND(ID_DrawPoly, &CWinProg2Doc::OnDrawpoly)
+	ON_UPDATE_COMMAND_UI(ID_DrawPoly, &CWinProg2Doc::OnUpdateDrawpoly)
+	ON_COMMAND(ID_TextBox, &CWinProg2Doc::OnTextbox)
+	ON_UPDATE_COMMAND_UI(ID_TextBox, &CWinProg2Doc::OnUpdateTextbox)
+	ON_COMMAND(ID_ELLipse, &CWinProg2Doc::OnEllipse)
+	ON_UPDATE_COMMAND_UI(ID_ELLipse, &CWinProg2Doc::OnUpdateEllipse)
+	ON_COMMAND(ID_SelectObject, &CWinProg2Doc::OnSelectobject)
+	ON_UPDATE_COMMAND_UI(ID_SelectObject, &CWinProg2Doc::OnUpdateSelectobject)
+	ON_COMMAND(ID_FreeLine, &CWinProg2Doc::OnFreeline)
+	ON_UPDATE_COMMAND_UI(ID_FreeLine, &CWinProg2Doc::OnUpdateFreeline)
 END_MESSAGE_MAP()
 
 
@@ -45,8 +47,17 @@ CWinProg2Doc::CWinProg2Doc()
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 	select = EMPTY;
-	color = RGB(0, 0, 0);
 	bold = ONE;
+	index = 0;
+	Empty = TRUE;
+	RE_Empty = TRUE;
+	str = _T("");
+	pen_type = PS_SOLID;
+	start = FALSE;
+	Obj_select = FALSE;
+	font_style.font_color = RGB(0, 0, 0);
+	color = RGB(0, 0, 0);
+	m_fill_color = RGB(255, 255, 255);
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -153,29 +164,10 @@ void CWinProg2Doc::Dump(CDumpContext& dc) const
 // CWinProg2Doc 명령
 
 
-void CWinProg2Doc::OnColor()
-{
-	CColorDialog dlg(RGB(255,0,0),CC_FULLOPEN);
-	dlg.DoModal();
-	color = dlg.GetColor();
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CWinProg2Doc::OnFont()
-{
-	CFontDialog dlg;
-	if (dlg.DoModal() == IDOK){
-		COLORREF color = dlg.GetColor();
-
-		LOGFONT lf;
-		dlg.GetCurrentFont(&lf);
-	}
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
+//LINE, POLYLINE 생성 및 데이터 가져오기 함수
 PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
 
+	//새로 생성되는 경우
 	if (isNew){
 		m_Cur = new PolyLine();
 		m_Object.AddTail(m_Cur);
@@ -183,119 +175,298 @@ PolyLine* CWinProg2Doc::getPolyLineDraw(BOOL isNew){
 		return (PolyLine*)m_Cur;
 	}
 
-	if (m_Cur != NULL && select == POLYLINE) {
+	//기존 값의 위치를 얻는 경우
+	if (m_Cur != NULL && (select == POLYLINE || select == LINE || tmp_select == POLYLINE || tmp_select == LINE)) {
 		return (PolyLine*)m_Cur;
 	}
 	return NULL;
 }
 
+//Rectangle 생성 및 데이터 가져오기 함수
+RectAngle* CWinProg2Doc::getRectDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new RectAngle();
+		m_Object.AddTail(m_Cur);
+
+		return (RectAngle*)m_Cur;
+	}
+
+	//기존 값의 위치를 얻을 때
+	if (m_Cur != NULL && (select == RECTANGLE || tmp_select == RECTANGLE))
+		return (RectAngle*)m_Cur;
+
+	return NULL;
+}
+
+//TEXTBOX 생성 및 데이터 가져오기 함수
+TextBox* CWinProg2Doc::getTextBoxDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new TextBox();
+		m_Object.AddTail(m_Cur);
+
+		return (TextBox*)m_Cur;
+	}
+
+	//기존 값 위치 얻음
+	if (m_Cur != NULL && (select == TEXT || tmp_select == TEXT)){
+		return (TextBox*)m_Cur;
+	}
+
+	return NULL;
+}
+
+//ELLIPSE 생성 및 데이터 가져오기 함수
+ELLipse* CWinProg2Doc::getEllipseDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new ELLipse();
+		m_Object.AddTail(m_Cur);
+	}
+
+	//기존 값 위치 얻음
+	if (m_Cur != NULL && (select == ELLIPSE || tmp_select == ELLIPSE)){
+		return (ELLipse*)m_Cur;
+	}
+
+	return NULL;
+}
+
+//FREELINE 생성 및 데이터 가져오기 함수
+FreeLine* CWinProg2Doc::getFreeLineDraw(BOOL isNew){
+	//새로 생성
+	if (isNew){
+		m_Cur = new FreeLine();
+		m_Object.AddTail(m_Cur);
+	}
+
+	//기존 값 위치 얻음
+	if (m_Cur != NULL && select == FREELINE){
+		return (FreeLine*)m_Cur;
+	}
+
+	return NULL;
+}
+
+//작업정보가 저장된 포인터리스트 반환함수
 CPtrList& CWinProg2Doc::getObject() {
 	return m_Object;
 }
 
-void CWinProg2Doc::OnBold1()
+//Line 설정
+void CWinProg2Doc::OnLine()
 {
-	bold = ONE;
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	
+	if (select != LINE){
+		select = LINE;
+		strg = _T("Line");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+}
+
+//Line 설정 체크 여부
+void CWinProg2Doc::OnUpdateLine(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == LINE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+//Rectangle 선택
+void CWinProg2Doc::OnRectangle()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+
+	if (select != RECTANGLE){
+		select = RECTANGLE;
+		strg = _T("Rectangle");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
 }
 
 
-void CWinProg2Doc::OnBold2()
+//Rectangle 체크 설정 여부
+void CWinProg2Doc::OnUpdateRectangle(CCmdUI *pCmdUI)
 {
-	bold = TWO;
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == RECTANGLE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
 }
 
-
-void CWinProg2Doc::OnBold3()
+//Polyline 메뉴 선택
+void CWinProg2Doc::OnDrawpoly()
 {
-	bold = THREE;
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString str;
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != POLYLINE){
+		select = POLYLINE;
+		str = _T("Polyline");
+	}
+	else{
+		select = EMPTY;
+		str.LoadStringW(ID_INDICATOR_TOOL);
+	}
+	pMainFrame->m_wndStatusBar.SetPaneText(2, str);
 }
 
-
-void CWinProg2Doc::OnBold4()
+//Polyline 선택시 체크 설정 확인
+void CWinProg2Doc::OnUpdateDrawpoly(CCmdUI *pCmdUI)
 {
-	bold = FOUR;
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CWinProg2Doc::OnBold5()
-{
-	bold = FIVE;
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CWinProg2Doc::OnBold6()
-{
-	bold = SIX;
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CWinProg2Doc::OnUpdateBold1(CCmdUI *pCmdUI)
-{
-	if (bold == ONE){
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == POLYLINE){
 		pCmdUI->SetCheck(1);
 	}
 	else
 		pCmdUI->SetCheck(0);
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 }
 
-
-void CWinProg2Doc::OnUpdateBold2(CCmdUI *pCmdUI)
+//TextBox선택
+void CWinProg2Doc::OnTextbox()
 {
-	if (bold == TWO){
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+
+	if (select != TEXT){
+		select = TEXT;
+		strg = _T("TextBox");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+
+}
+
+//텍스트상자메뉴 체크표시여부
+void CWinProg2Doc::OnUpdateTextbox(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == TEXT){
 		pCmdUI->SetCheck(1);
 	}
 	else
 		pCmdUI->SetCheck(0);
+}
+
+//Ellipse 설정
+void CWinProg2Doc::OnEllipse()
+{
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != ELLIPSE){
+		select = ELLIPSE;
+		strg = _T("Ellipse");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+
+}
+
+//Ellipse 설정 체크 여부
+void CWinProg2Doc::OnUpdateEllipse(CCmdUI *pCmdUI)
+{
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == ELLIPSE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
+void CWinProg2Doc::OnSelectobject()
+{
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != SELECT){
+		select = SELECT;
+		strg = _T("개체선택");
+
+		pView->m_Tracker = new CRectTracker();
+
+		pView->m_Tracker->m_rect = pView->select_rect;
+		pView->m_Tracker->m_nStyle = CRectTracker::hatchInside;
+		pView->m_Tracker->m_nStyle = CRectTracker::resizeInside;
+
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		delete pView->m_Tracker;
+		pView->m_Tracker = NULL;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
 }
 
 
-void CWinProg2Doc::OnUpdateBold3(CCmdUI *pCmdUI)
+void CWinProg2Doc::OnUpdateSelectobject(CCmdUI *pCmdUI)
 {
-	if (bold == THREE){
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == SELECT)
 		pCmdUI->SetCheck(1);
-	}
 	else
 		pCmdUI->SetCheck(0);
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 }
 
 
-void CWinProg2Doc::OnUpdateBold4(CCmdUI *pCmdUI)
+void CWinProg2Doc::OnFreeline()
 {
-	if (bold == FOUR){
-		pCmdUI->SetCheck(1);
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != FREELINE){
+		select = FREELINE;
+		strg = _T("자유곡선");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
 	}
-	else
-		pCmdUI->SetCheck(0);
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
 }
 
 
-void CWinProg2Doc::OnUpdateBold5(CCmdUI *pCmdUI)
+void CWinProg2Doc::OnUpdateFreeline(CCmdUI *pCmdUI)
 {
-	if (bold == FIVE){
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == FREELINE)
 		pCmdUI->SetCheck(1);
-	}
 	else
 		pCmdUI->SetCheck(0);
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-}
-
-
-void CWinProg2Doc::OnUpdateBold6(CCmdUI *pCmdUI)
-{
-	if (bold == SIX){
-		pCmdUI->SetCheck(1);
-	}
-	else
-		pCmdUI->SetCheck(0);
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 }

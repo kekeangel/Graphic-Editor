@@ -3,16 +3,15 @@
 //
 #include "Object_Draw.h"
 #include "PolyLine.h"
+#include "RectAngle.h"
+#include "TextBox.h"
+#include "ELLipse.h"
+#include "FreeLine.h"
+#include "typedef.h"
 
 #pragma once
 
-enum Select{
-	POLYLINE, TEXT, EMPTY
-};
 
-extern enum Bold{
-	NON, ONE, TWO, THREE, FOUR, FIVE, SIX
-};
 
 class CWinProg2Doc : public CDocument
 {
@@ -22,24 +21,43 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 public:
-
-protected:
 	Object_Draw* m_Cur;
 	CPtrList m_Object;
+	CList<Select, Select> m_select;
 
 // 작업입니다.
 public:
-	Select select;
+	Select select, tmp_select;
 	COLORREF color;
+	//LINE, POLYLINE 생성함수
 	PolyLine* getPolyLineDraw(BOOL isNew = FALSE);
+	//RECTANGLE 생성함수
+	RectAngle* getRectDraw(BOOL isNew = FALSE);
+	//TEXTBOX 생성함수
+	TextBox* getTextBoxDraw(BOOL isNew = FALSE);
+	//ELLIPSE 생성함수
+	ELLipse* getEllipseDraw(BOOL isNew = FALSE);
+	//FREELINE 생성함수
+	FreeLine* getFreeLineDraw(BOOL isNew = FALSE);
+	//작업정보가 저장된 포인터리스트 반환
+	CPtrList& getObject();
+
 	Bold bold;
+	int index;
+	UINT pen_type, hatch_pattern;
+	BOOL Empty, RE_Empty, start;
+	CString str;
+	CFont font;
+	CArray<TCHAR, TCHAR> m_str;
+	BOOL Obj_select;
+
+	style font_style;
+	COLORREF m_fill_color;
 
 // 재정의입니다.
 public:
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
-	CPtrList& getObject();
-
 #ifdef SHARED_HANDLERS
 	virtual void InitializeSearchContent();
 	virtual void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds);
@@ -64,18 +82,18 @@ protected:
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
 public:
-	afx_msg void OnColor();
-	afx_msg void OnFont();
-	afx_msg void OnBold1();
-	afx_msg void OnBold2();
-	afx_msg void OnBold3();
-	afx_msg void OnBold4();
-	afx_msg void OnBold5();
-	afx_msg void OnBold6();
-	afx_msg void OnUpdateBold1(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold2(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold3(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold4(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold5(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateBold6(CCmdUI *pCmdUI);
+	afx_msg void OnLine();
+	afx_msg void OnUpdateLine(CCmdUI *pCmdUI);
+	afx_msg void OnRectangle();
+	afx_msg void OnUpdateRectangle(CCmdUI *pCmdUI);
+	afx_msg void OnDrawpoly();
+	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
+	afx_msg void OnTextbox();
+	afx_msg void OnUpdateTextbox(CCmdUI *pCmdUI);
+	afx_msg void OnEllipse();
+	afx_msg void OnUpdateEllipse(CCmdUI *pCmdUI);
+	afx_msg void OnSelectobject();
+	afx_msg void OnUpdateSelectobject(CCmdUI *pCmdUI);
+	afx_msg void OnFreeline();
+	afx_msg void OnUpdateFreeline(CCmdUI *pCmdUI);
 };
