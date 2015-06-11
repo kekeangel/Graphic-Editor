@@ -13,7 +13,7 @@ protected:
 	Bold m_bold;
 	UINT m_pen_type;
 	style m_font_style;
-
+	CString m_str;
 
 public:
 	TextBox();
@@ -26,6 +26,7 @@ public:
 	void setFillColor(COLORREF color);
 	void setFontColor(style font_style);
 	void setDrawType(Select select);
+	void setString(CString str);
 
 	void movePoint(int t_x, int t_y, int b_x, int b_y);
 

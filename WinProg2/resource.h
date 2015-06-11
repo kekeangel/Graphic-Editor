@@ -33,7 +33,6 @@
 #define IDS_EDIT_MENU                   306
 #define IDD_TEXTEDIT                    310
 #define IDC_EDIT1                       1000
-#define IDC_BUTTON1                     1001
 #define IDC_PROPERTY                    1001
 #define ID_32771                        32771
 #define ID_32772                        32772
@@ -79,23 +78,40 @@
 #define ID_SelectObject                 32816
 #define ID_BUTTON32820                  32820
 #define ID_BUTTON32825                  32825
+#define ID_SETBOLD                      32825
 #define ID_32836                        32836
 #define ID_DeleteAll                    32837
 #define ID_32838                        32838
 #define ID_FreeLine                     32840
 #define ID_32841                        32841
 #define ID_FillColor                    32842
-#define ID_BUTTON32844                  32844
 #define ID_BUTTON32845                  32845
 #define ID_32846                        32846
 #define ID_Object_Delete                32847
+#define ID_32848                        32848
+#define ID_SelectObjDel                 32849
+#define ID_ObjSelectDel                 32851
+#define ID_SETLINESTYLE                 32854
+#define ID_32855                        32855
+#define ID_32856                        32856
+#define ID_32857                        32857
+#define ID_32858                        32858
+#define ID_32859                        32859
+#define ID_32860                        32860
+#define ID_32861                        32861
+#define ID_HS_BDIAGONAL                 32862
+#define ID_CROSS                        32863
+#define ID_DIAGCROSS                    32864
+#define ID_FDIAGONAL                    32865
+#define ID_HORIZONTAL                   32866
+#define ID_VERTICAL                     32867
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        334
-#define _APS_NEXT_COMMAND_VALUE         32848
+#define _APS_NEXT_RESOURCE_VALUE        335
+#define _APS_NEXT_COMMAND_VALUE         32868
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           311
 #endif

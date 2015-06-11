@@ -123,11 +123,12 @@ BEGIN
     BUTTON      ID_TextBox
     BUTTON      ID_FreeLine
     SEPARATOR
-    BUTTON      ID_BUTTON32825
+    BUTTON      ID_SETLINESTYLE
     BUTTON      ID_Font
     BUTTON      ID_Color
     BUTTON      ID_DeleteAll
-    BUTTON      ID_BUTTON32844
+    BUTTON      ID_ObjSelectDel
+    BUTTON      ID_FillColor
     BUTTON      ID_BUTTON32845
 END
 
@@ -270,11 +271,21 @@ BEGIN
             MENUITEM "5",                           ID_Bold5
             MENUITEM "6",                           ID_Bold6
         END
+        POPUP "채우기 패턴"
+        BEGIN
+            MENUITEM "빗살무늬",                        ID_HS_BDIAGONAL
+            MENUITEM "가로세로 격자",                     ID_CROSS
+            MENUITEM "그물눈",                         ID_DIAGCROSS
+            MENUITEM "사선 해칭",                       ID_FDIAGONAL
+            MENUITEM "가로 해칭",                       ID_HORIZONTAL
+            MENUITEM "세로 해칭",                       ID_VERTICAL
+        END
     END
     POPUP "개체도구"
     BEGIN
         MENUITEM "개체선택",                        ID_SelectObject
-        MENUITEM "전체 지우기",                      ID_DeleteAll
+        MENUITEM "선택객체 삭제\tDel",                ID_ObjSelectDel
+        MENUITEM "전체 삭제",                       ID_DeleteAll
     END
 END
 
@@ -285,7 +296,7 @@ BEGIN
         MENUITEM "잘라내기(&T)\tCtrl+X",            ID_EDIT_CUT
         MENUITEM "복사(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "붙여넣기(&P)\tCtrl+V",            ID_EDIT_PASTE
-        MENUITEM "삭제(&D)",                      ID_Object_Delete
+        MENUITEM "삭제(&D)\tDel",                 ID_Object_Delete
     END
 END
 
@@ -311,20 +322,21 @@ END
 
 IDR_MAINFRAME ACCELERATORS
 BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
-    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
-    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
-    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
-    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_DELETE,      ID_Object_Delete,       VIRTKEY, NOINVERT
 END
 
 
@@ -588,14 +600,23 @@ END
 STRINGTABLE
 BEGIN
     ID_SelectObject         "그려진 개체를 선택합니다\n개체선택"
+    ID_SETBOLD              "선"
 END
 
 STRINGTABLE
 BEGIN
     ID_32836                "화면 전체를 지웁니다\n전체지우기"
-    ID_DeleteAll            "화면 전체를 지웁니다.\n전체 지우기"
+    ID_DeleteAll            "화면 전체를 지웁니다.\n전체 삭제"
     ID_FreeLine             "자유곡선을 그립니다.\n자유곡선"
+    ID_FillColor            "채우기 색상을 설정합니다\n채우기 색상"
     ID_Object_Delete        "객체 전체를 지웁니다.\n삭제"
+END
+
+STRINGTABLE
+BEGIN
+    ID_SelectObjDel         "현재 선택된 객체를 제거합니다.\n선택객체 삭제"
+    ID_ObjSelectDel         "객체 전체를 지웁니다.\n선택객체 삭제"
+    ID_SETLINESTYLE         "선 종류를 설정합니다"
 END
 
 #endif    // 한국어(대한민국) resources

@@ -23,6 +23,7 @@ void PolyLine::Draw(CDC *pDC){
 	CPen mov_pen(PS_SOLID, 6, RGB(0, 0, 0));
 	CPen *oldPen = pDC->SelectObject(&pen);
 	CBrush brush(RGB(0, 0, 0));
+
 	POSITION pos = m_points.GetHeadPosition();
 
 	CPoint p1, p2;

@@ -7,7 +7,6 @@
 #include "TextBox.h"
 #include "ELLipse.h"
 #include "FreeLine.h"
-#include "FillDraw.h"
 #include "typedef.h"
 
 #pragma once
@@ -40,14 +39,12 @@ public:
 	ELLipse* getEllipseDraw(BOOL isNew = FALSE);
 	//FREELINE 생성함수
 	FreeLine* getFreeLineDraw(BOOL isNew = FALSE);
-
-	FillDraw* getFillDraw(bool bNew = FALSE);
 	//작업정보가 저장된 포인터리스트 반환
 	CPtrList& getObject();
 
 	Bold bold;
 	int index;
-	UINT pen_type;
+	UINT pen_type, hatch_pattern;
 	BOOL Empty, RE_Empty, start;
 	CString str;
 	CFont font;
@@ -55,6 +52,7 @@ public:
 	BOOL Obj_select;
 
 	style font_style;
+	COLORREF m_fill_color;
 
 // 재정의입니다.
 public:

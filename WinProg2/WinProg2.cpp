@@ -51,6 +51,12 @@ BEGIN_MESSAGE_MAP(CWinProg2App, CWinAppEx)
 	ON_COMMAND(ID_Bold6, &CWinProg2App::OnBold6)
 	ON_UPDATE_COMMAND_UI(ID_Bold6, &CWinProg2App::OnUpdateBold6)
 	ON_COMMAND(ID_FillColor, &CWinProg2App::OnFillcolor)
+	ON_COMMAND(ID_HS_BDIAGONAL, &CWinProg2App::OnHsBdiagonal)
+	ON_COMMAND(ID_CROSS, &CWinProg2App::OnCross)
+	ON_COMMAND(ID_DIAGCROSS, &CWinProg2App::OnDiagcross)
+	ON_COMMAND(ID_FDIAGONAL, &CWinProg2App::OnFdiagonal)
+	ON_COMMAND(ID_HORIZONTAL, &CWinProg2App::OnHorizontal)
+	ON_COMMAND(ID_VERTICAL, &CWinProg2App::OnVertical)
 END_MESSAGE_MAP()
 
 
@@ -230,15 +236,29 @@ void CWinProg2App::SaveCustomState()
 
 //이하 선 종류 메세지 핸들러 및 갱신
 
-//색상설정메뉴
+//선색상설정메뉴
 void CWinProg2App::OnColor()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CColorDialog dlg(RGB(255, 0, 0), CC_FULLOPEN);
+
+	CColorDialog dlg(RGB(0, 0, 0), CC_FULLOPEN);
+	CPoint point;
 	dlg.DoModal();
-	pDoc->color = dlg.GetColor();
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	if (pDoc->select == SELECT){
+		pView->cmd = LINECOLOR;
+		pDoc->color = dlg.GetColor();
+
+		pView->select_DrawObj(point);
+	}
+	else{
+		pDoc->color = dlg.GetColor();
+	}
 }
 
 //글꼴설정메뉴
@@ -264,9 +284,22 @@ void CWinProg2App::OnFont()
 void CWinProg2App::OnPsSolid()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
 	pDoc->pen_type = PS_SOLID;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //실선 체크여부 설정
@@ -284,9 +317,25 @@ void CWinProg2App::OnUpdatePsSolid(CCmdUI *pCmdUI)
 void CWinProg2App::OnPsDash()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
 	pDoc->pen_type = PS_DASH;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //파선 체크여부 설정
@@ -305,9 +354,22 @@ void CWinProg2App::OnUpdatePsDash(CCmdUI *pCmdUI)
 void CWinProg2App::OnPsDot()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
 	pDoc->pen_type = PS_DOT;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //점선 체크여부 설정
@@ -326,10 +388,22 @@ void CWinProg2App::OnUpdatePsDot(CCmdUI *pCmdUI)
 void CWinProg2App::OnPsDashdot()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
 	pDoc->pen_type = PS_DASHDOT;
 
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //일점쇄선 체크여부 설정
@@ -347,9 +421,23 @@ void CWinProg2App::OnUpdatePsDashdot(CCmdUI *pCmdUI)
 void CWinProg2App::OnPsDashdotdot()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
 	pDoc->pen_type = PS_DASHDOTDOT;
+
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //이점쇄선 체크여부 설정
@@ -370,9 +458,22 @@ void CWinProg2App::OnUpdatePsDashdotdot(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold1()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
 	pDoc->bold = ONE;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //선굵기1 체크여부
@@ -392,9 +493,22 @@ void CWinProg2App::OnUpdateBold1(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold2()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
-	pDoc->bold = TWO;
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+	pDoc->bold = TWO;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //선굵기2 체크여부
@@ -414,9 +528,22 @@ void CWinProg2App::OnUpdateBold2(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold3()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
-	pDoc->bold = THREE;
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+	pDoc->bold = THREE;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //선굵기3 체크여부
@@ -436,9 +563,22 @@ void CWinProg2App::OnUpdateBold3(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold4()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
-	pDoc->bold = FOUR;
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);	pDoc->bold = FOUR;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+
 }
 
 //선굵기4 체크여부
@@ -459,9 +599,23 @@ void CWinProg2App::OnUpdateBold4(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold5()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
-	pDoc->bold = FIVE;
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+	pDoc->bold = FIVE;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+
 }
 
 //선굵기5 체크여부
@@ -481,9 +635,22 @@ void CWinProg2App::OnUpdateBold5(CCmdUI *pCmdUI)
 void CWinProg2App::OnBold6()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
-	pDoc->bold = SIX;
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+	pDoc->bold = SIX;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = SETBOLD;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }
 
 //선굵기6 체크여부
@@ -503,10 +670,167 @@ void CWinProg2App::OnUpdateBold6(CCmdUI *pCmdUI)
 void CWinProg2App::OnFillcolor()
 {
 	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
-
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	CColorDialog dlg(RGB(255, 0, 0), CC_FULLOPEN);
+	CPoint point;
 	dlg.DoModal();
-	pDoc->color = dlg.GetColor();
+	
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
 
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = FILLCOLOR;
+		pDoc->m_fill_color = dlg.GetColor();
+
+		pView->select_DrawObj(point);
+	}
+	else{
+		pDoc->m_fill_color = dlg.GetColor();
+	}
+
+}
+
+//이하 브러시패턴 설정 메세지 핸들러
+void CWinProg2App::OnHsBdiagonal()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_BDIAGONAL;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+}
+
+
+void CWinProg2App::OnCross()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_CROSS;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+}
+
+
+void CWinProg2App::OnDiagcross()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_DIAGCROSS;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+}
+
+
+void CWinProg2App::OnFdiagonal()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_FDIAGONAL;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+}
+
+
+void CWinProg2App::OnHorizontal()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_HORIZONTAL;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
+}
+
+
+void CWinProg2App::OnVertical()
+{
+	CWinProg2Doc* pDoc = (CWinProg2Doc*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveDocument();
+	CWinProg2View* pView = (CWinProg2View*)((CMainFrame*)AfxGetMainWnd())->GetActiveFrame()->GetActiveView();
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CPoint point;
+
+	::GetCursorPos(&point);
+	pView->ScreenToClient(&point);
+
+	pDoc->hatch_pattern = HS_VERTICAL;
+
+	if (pDoc->select == SELECT && pView->Writable == TRUE){
+		pView->cmd = BRUSH;
+
+		pView->select_DrawObj(point);
+	}
+	else{
+
+	}
 }

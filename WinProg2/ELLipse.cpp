@@ -17,6 +17,9 @@ void ELLipse::Draw(CDC* pDC){
 
 	CPen pen(m_pen_type, m_bold, m_line_color);
 	CPen *oldPen = pDC->SelectObject(&pen);
+	CBrush brush(m_fill_color);
+	CBrush *oldBrush = pDC->SelectObject(&brush);
+
 	POSITION pos = m_points.GetHeadPosition();
 
 	CPoint p1, p2;
@@ -29,6 +32,7 @@ void ELLipse::Draw(CDC* pDC){
 		p1 = p2;
 	}
 	pDC->SelectObject(oldPen);
+	pDC->SelectObject(oldBrush);
 }
 
 void ELLipse::addPoint(CPoint& point){

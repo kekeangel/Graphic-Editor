@@ -14,7 +14,7 @@ public:
 	Select m_select;
 	Bold m_bold;
 	CPoint text_point;
-	UINT m_pen_type;
+	UINT m_pen_type, hatch_pattern;
 	CPoint m_top, m_bottom;
 	CRect rect, text_rect;
 

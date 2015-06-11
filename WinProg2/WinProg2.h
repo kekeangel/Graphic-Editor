@@ -60,6 +60,12 @@ public:
 	afx_msg void OnBold6();
 	afx_msg void OnUpdateBold6(CCmdUI *pCmdUI);
 	afx_msg void OnFillcolor();
+	afx_msg void OnHsBdiagonal();
+	afx_msg void OnCross();
+	afx_msg void OnDiagcross();
+	afx_msg void OnFdiagonal();
+	afx_msg void OnHorizontal();
+	afx_msg void OnVertical();
 };
 
 extern CWinProg2App theApp;

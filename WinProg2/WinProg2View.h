@@ -66,6 +66,9 @@ public:
 	void select_DrawObj(CPoint point);
 	void move_Object();
 	afx_msg void OnObjectDelete();
+	afx_msg void OnObjselectdel();
+	afx_msg void OnUpdateObjectDelete(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateObjselectdel(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

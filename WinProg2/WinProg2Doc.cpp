@@ -55,6 +55,9 @@ CWinProg2Doc::CWinProg2Doc()
 	pen_type = PS_SOLID;
 	start = FALSE;
 	Obj_select = FALSE;
+	font_style.font_color = RGB(0, 0, 0);
+	color = RGB(0, 0, 0);
+	m_fill_color = RGB(255, 255, 255);
 }
 
 CWinProg2Doc::~CWinProg2Doc()
@@ -234,7 +237,7 @@ ELLipse* CWinProg2Doc::getEllipseDraw(BOOL isNew){
 FreeLine* CWinProg2Doc::getFreeLineDraw(BOOL isNew){
 	//새로 생성
 	if (isNew){
-		m_Cur = new ELLipse();
+		m_Cur = new FreeLine();
 		m_Object.AddTail(m_Cur);
 	}
 
@@ -243,20 +246,6 @@ FreeLine* CWinProg2Doc::getFreeLineDraw(BOOL isNew){
 		return (FreeLine*)m_Cur;
 	}
 
-	return NULL;
-}
-
-FillDraw* CWinProg2Doc::getFillDraw(bool bNew)
-{
-	if (bNew) {
-		m_Cur = new FillDraw();
-		m_Object.AddTail(m_Cur);
-
-		return (FillDraw*)m_Cur;
-	}
-	if (m_Cur != NULL && select == FILL) {
-		return (FillDraw*)m_Cur;
-	}
 	return NULL;
 }
 

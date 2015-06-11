@@ -17,12 +17,11 @@ void TextBox::Draw(CDC* pDC){
 	
 	CPen pen(m_pen_type, m_bold, m_line_color);
 	CPen *oldPen = pDC->SelectObject(&pen);
+	CBrush brush(m_fill_color);
+	CBrush *oldBrush = pDC->SelectObject(&brush);
 	
 	CFont font;
 	font.CreateFontIndirectW(&m_font_style.lf);
-	//font.CreateFontIndirectW(&m_font_style.lf);
-
-	//pDC->SetTextColor(m_font_style.font_color);
 	pDC->SelectObject(&font);
 	POSITION pos = m_points.GetHeadPosition();
 	
@@ -44,9 +43,10 @@ void TextBox::Draw(CDC* pDC){
 	text_rect.bottom -= 5;
 
 	
-	pDC->DrawTextW(pDoc->str, &text_rect, DT_LEFT);
+	pDC->DrawTextW(m_str, &text_rect, DT_LEFT);
 
 	pDC->SelectObject(oldPen);
+	pDC->SelectObject(oldBrush);
 }
 
 void TextBox::addPoint(CPoint& point){
@@ -57,10 +57,6 @@ void TextBox::setPencil(Bold bold, UINT pen_type, COLORREF color){
 	m_line_color = color;
 	m_pen_type = pen_type;
 	m_bold = bold;
-}
-
-void TextBox::setFillColor(COLORREF color){
-	m_fill_color = color;
 }
 
 BOOL TextBox::getselectPoint(CPoint top, CPoint bottom){
@@ -124,4 +120,12 @@ void TextBox::movePoint(int t_x, int t_y, int b_x, int b_y){
 	m_points.SetAt(prev_pos, p1);
 
 	text_rect.SetRect(p1.x + 5, p1.y + 5, p2.x - 5, p2.y - 5);
+}
+
+void TextBox::setFillColor(COLORREF color){
+	m_fill_color = color;
+}
+
+void TextBox::setString(CString str){
+	m_str = str;
 }

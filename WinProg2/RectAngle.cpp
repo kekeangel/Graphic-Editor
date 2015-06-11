@@ -19,7 +19,10 @@ void RectAngle::Draw(CDC* pDC){
 
 	CPen pen(m_pen_type, m_bold, m_line_color);
 	CPen *oldPen = pDC->SelectObject(&pen);
+	CBrush brush(m_fill_color);
+	CBrush *oldBrush = pDC->SelectObject(&brush);
 	POSITION pos = m_points.GetHeadPosition();
+
 
 	CPoint p1, p2;
 	p1 = m_points.GetNext(pos);
@@ -37,6 +40,7 @@ void RectAngle::Draw(CDC* pDC){
 		}
 	}
 	pDC->SelectObject(oldPen);
+	pDC->SelectObject(oldBrush);
 }
 
 void RectAngle::addPoint(CPoint& point){
@@ -108,4 +112,8 @@ void RectAngle::movePoint(int t_x, int t_y, int b_x, int b_y){
 	m_points.SetAt(prev_pos, p1);
 
 	//text_rect.SetRect(p1.x + 5, p1.y + 5, p2.x - 5, p2.y - 5);
+}
+
+void RectAngle::setFillColor(COLORREF color){
+	m_fill_color = color;
 }

@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_POS, OnUpdatePos)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, OnUpdatePos)
+	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, OnResetToolBar)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -338,4 +339,18 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 void CMainFrame::OnUpdatePos(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable();
+}
+
+LRESULT CMainFrame::OnResetToolBar(WPARAM wParam, LPARAM lParam){
+	UINT uID = (UINT)wParam;
+
+	if (uID == IDR_MAINFRAME_256){
+		CMenu MainMenu;
+		MainMenu.LoadMenu(IDR_MAINFRAME_256);
+		CMenu* pMenu = MainMenu.GetSubMenu(0);
+
+		m_wndToolBar.ReplaceButton(ID_FILE_NEW, CMFCToolBarMenuButton(
+			(UINT)-1, *pMenu, 0, _T("Drop-down button")));
+	}
+	return 0;
 }
