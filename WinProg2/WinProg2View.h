@@ -14,13 +14,20 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CWinProg2Doc* GetDocument() const;
-	BOOL m_bDrawMode;
-	int m_btSelectMode;
-	CPoint m_StartPoint, m_EndPoint;
-	CPoint m_PointStart, m_PointEnd;
 
 // 작업입니다.
 public:
+	CRect m_rect, select_rect;
+	BOOL Drawing, Writable;
+	CPoint old_point;
+	CPoint cur_point;
+	POSITION tmp_pos;
+	CPoint top, bottom;
+	Command cmd;
+
+	CDC memDC;
+	CBitmap bitmap, *pOldbitmap;
+	CRectTracker* m_Tracker;
 
 // 재정의입니다.
 public:
@@ -46,21 +53,22 @@ protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnDrawpoly();
-	afx_msg void OnUpdateDrawpoly(CCmdUI *pCmdUI);
-	void OnEllipse(CPoint &point);
-	void OnRectangle(CPoint &point);
-	afx_msg void DrawEllipseEnd();
-	afx_msg void DrawRectangleEnd();
-	afx_msg void OnButtonRectangle();
-	afx_msg void OnButtonEllipse();
-	afx_msg void OnDrawellipse();
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+	virtual void OnInitialUpdate();
+	afx_msg void OnDeleteall();
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	void select_DrawObj(CPoint point);
+	void move_Object();
+	afx_msg void OnObjectDelete();
+	afx_msg void OnObjselectdel();
+	afx_msg void OnUpdateObjectDelete(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateObjselectdel(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // WinProg2View.cpp의 디버그 버전

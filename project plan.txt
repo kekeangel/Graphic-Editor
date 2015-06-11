@@ -1,5 +1,0 @@
-line , etc 정재훈
-
-polyline , text 김찬규
-
-ellipse , rectangle 이호영

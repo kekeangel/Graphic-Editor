@@ -29,6 +29,11 @@ res\WinProg2.ico
 res\WinProg2.rc2
     이 파일에는 Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스가 포함되어 있습니다. 리소스 편집기로 편집할 수 없는 모든 리소스는 이 파일에 넣어야 합니다.
 
+WinProg2.reg
+    프레임워크에서 설정될 등록 설정의 유형을 보여 주는 예제 .reg 파일입니다. 이 파일을 .reg 파일로 사용하여
+    응용 프로그램과 함께 사용하거나 또는 이를 삭제하고 기본값인 RegisterShellFileTypes 등록을 사용할 수 있습니다.
+
+
 /////////////////////////////////////////////////////////////////////////////
 
 주 프레임 창:
@@ -54,6 +59,14 @@ ChildFrm.h, ChildFrm.cpp
 
 WinProg2Doc.h, WinProg2Doc.cpp - 문서
     이 파일에는 CWinProg2Doc 클래스가 포함됩니다. 이 파일을 편집하여 특수 문서 데이터를 추가하고 CWinProg2Doc::Serialize를 통해 파일 저장 및 로드를 구현합니다.
+    문서에는 다음과 같은 문자열이 있습니다.
+        파일 확장명:      wpd
+        파일 형식 ID:        WinProg2.Document
+        주 프레임 캡션:  WinProg2
+        Doc 형식 이름:       WinProg2
+        필터 이름:         WinProg2 Files (*.wpd)
+        파일의 새 약식 이름: WinProg2
+        파일 형식의 긴 이름: WinProg2.Document
 
 WinProg2View.h, WinProg2View.cpp - 문서 뷰
     이 파일에는 CWinProg2View 클래스가 포함됩니다.

@@ -28,9 +28,6 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-	
-public:
-	CMFCStatusBar     m_wndStatusBar;
 
 protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CMFCMenuBar       m_wndMenuBar;
@@ -38,16 +35,22 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	//CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
 
+public:
+	CMFCStatusBar     m_wndStatusBar;
+
 // 생성된 메시지 맵 함수
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnWindowManager();
 	afx_msg void OnViewCustomize();
 	afx_msg LRESULT OnToolbarCreateNew(WPARAM wp, LPARAM lp);
+	afx_msg void OnApplicationLook(UINT id);
+	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
+	afx_msg LRESULT OnResetToolBar(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void OnUpdatePos(CCmdUI * pCmdUI);
+	void OnUpdatePos(CCmdUI* pCmdUI);
 };
 
 
