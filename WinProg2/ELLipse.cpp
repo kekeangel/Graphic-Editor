@@ -49,6 +49,8 @@ void ELLipse::setFillColor(COLORREF color){
 	m_fill_color = color;
 }
 
+
+
 BOOL ELLipse::getselectPoint(CPoint top, CPoint bottom){
 	POSITION pos = m_points.GetHeadPosition();
 	CPoint p1, p2;
@@ -65,6 +67,8 @@ BOOL ELLipse::getselectPoint(CPoint top, CPoint bottom){
 	return FALSE;
 }
 
+
+
 Select ELLipse::getDrawType(){
 	return m_select;
 }
@@ -72,7 +76,28 @@ Select ELLipse::getDrawType(){
 void ELLipse::setDrawType(Select select){
 	m_select = select;
 }
+/*
+void ELLipse::movePoint(int t_x, int t_y, int b_x, int b_y){
+POSITION pos = m_points.GetHeadPosition();
+POSITION prev_pos = m_points.GetHeadPosition();
 
+CPoint p1, p2;
+p1 = m_points.GetNext(pos);
+while (pos != NULL) {
+p2 = m_points.GetNext(pos);
+
+p1.x -= t_x;
+p1.y -= t_y;
+
+m_points.SetAt(prev_pos, p1);
+p1 = p2;
+m_points.GetNext(prev_pos);
+}
+
+p1.x -= b_x;
+p1.y -= b_y;
+m_points.SetAt(prev_pos, p1);
+}*/
 void ELLipse::movePoint(int t_x, int t_y, int b_x, int b_y){
 	POSITION pos = m_points.GetHeadPosition();
 	POSITION prev_pos = m_points.GetHeadPosition();
