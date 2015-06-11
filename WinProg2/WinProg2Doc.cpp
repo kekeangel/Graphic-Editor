@@ -165,6 +165,35 @@ void CWinProg2Doc::OnFont()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
+void CWinProg2Doc::OnRectangle()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+
+	if (select != RECTANGLE){
+		select = RECTANGLE;
+		strg = _T("Rectangle");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+}
+
+
+//Rectangle 체크 설정 여부
+void CWinProg2Doc::OnUpdateRectangle(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == RECTANGLE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
+}
+
 void CWinProg2Doc::OnEllipse()
 {
 	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
