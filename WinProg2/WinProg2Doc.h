@@ -21,6 +21,10 @@ public:
 // 작업입니다.
 public:
 	Select select;
+	//RECTANGLE 생성함수
+	RectAngle* getRectDraw(BOOL isNew = FALSE);
+	//ELLIPSE 생성함수
+	ELLipse* getEllipseDraw(BOOL isNew = FALSE);
 
 // 재정의입니다.
 public:

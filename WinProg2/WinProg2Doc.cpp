@@ -24,6 +24,10 @@ IMPLEMENT_DYNCREATE(CWinProg2Doc, CDocument)
 BEGIN_MESSAGE_MAP(CWinProg2Doc, CDocument)
 	ON_COMMAND(ID_Color, &CWinProg2Doc::OnColor)
 	ON_COMMAND(ID_Font, &CWinProg2Doc::OnFont)
+	ON_COMMAND(ID_RectAngle, &CWinProg2Doc::OnRectangle)
+	ON_UPDATE_COMMAND_UI(ID_RectAngle, &CWinProg2Doc::OnUpdateRectangle)
+	ON_COMMAND(ID_ELLipse, &CWinProg2Doc::OnEllipse)
+	ON_UPDATE_COMMAND_UI(ID_ELLipse, &CWinProg2Doc::OnUpdateEllipse)
 END_MESSAGE_MAP()
 
 
@@ -159,4 +163,33 @@ void CWinProg2Doc::OnFont()
 		dlg.GetCurrentFont(&lf);
 	}
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CWinProg2Doc::OnEllipse()
+{
+	CMainFrame *pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	CString strg;
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	if (select != ELLIPSE){
+		select = ELLIPSE;
+		strg = _T("Ellipse");
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+	else{
+		select = EMPTY;
+		strg.LoadStringW(ID_INDICATOR_TOOL);
+		pMainFrame->m_wndStatusBar.SetPaneText(2, strg);
+	}
+
+}
+
+//Ellipse 설정 체크 여부
+void CWinProg2Doc::OnUpdateEllipse(CCmdUI *pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (select == ELLIPSE)
+		pCmdUI->SetCheck(1);
+	else
+		pCmdUI->SetCheck(0);
 }
